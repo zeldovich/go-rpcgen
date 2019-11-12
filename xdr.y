@@ -1,7 +1,5 @@
 %{
 package main
-
-import "fmt"
 %}
 
 %union {
@@ -93,7 +91,7 @@ varlen: '<' '>'
   { $$ = $2 }
 
 val: CONST
-  { $$ = fmt.Sprintf("%d", $1) }
+  { $$ = $1 }
 | IDENT
   { $$ = $1 }
 

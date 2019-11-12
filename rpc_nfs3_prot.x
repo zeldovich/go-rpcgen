@@ -5,10 +5,10 @@ const NFS3_COOKIEVERFSIZE = 8;
 const NFS3_CREATEVERFSIZE = 8;
 const NFS3_WRITEVERFSIZE  = 8;
 
-typedef uint64_t uint64;
-typedef int64_t int64;
-typedef unsignedlong uint32;
-typedef long int32;
+// typedef unsigned hyper uint64;
+// typedef hyper int64;
+// typedef unsigned int uint32;
+// typedef int int32;
 typedef string filename3<>;
 typedef string nfspath3<>;
 typedef uint64 fileid3;
@@ -79,7 +79,7 @@ struct nfstime3 {
 };
 
 struct fattr3 {
-  ftype3     type;
+  ftype3     ftype;
   mode3      mode;
   uint32     nlink;
   uid3       uid;
@@ -450,7 +450,7 @@ struct devicedata3 {
   specdata3  spec;
 };
 
-union mknoddata3 switch (ftype3 type) {
+union mknoddata3 switch (ftype3 ftype) {
 case NF3CHR:
 case NF3BLK:
   devicedata3  device;

@@ -14,7 +14,7 @@ type declName struct {
 	n string
 }
 
-type declType interface{
+type declType interface {
 	goType() string
 }
 
@@ -22,33 +22,61 @@ type declTypeTypespec struct {
 	t typespec
 }
 
+func (t declTypeTypespec) goType() string {
+	return t.t.goType()
+}
+
 type declTypeArray struct {
-	t typespec
+	t  typespec
 	sz string
 }
 
+func (t declTypeArray) goType() string {
+	return fmt.Sprintf("[%s]%s", t.sz, t.t.goType())
+}
+
 type declTypeVarArray struct {
-	t typespec
+	t  typespec
 	sz string
+}
+
+func (t declTypeVarArray) goType() string {
+	return fmt.Sprintf("[]%s", t.t.goType())
 }
 
 type declTypeOpaqueArray struct {
 	sz string
 }
 
+func (t declTypeOpaqueArray) goType() string {
+	return fmt.Sprintf("[%s]byte", t.sz)
+}
+
 type declTypeOpaqueVarArray struct {
 	sz string
+}
+
+func (t declTypeOpaqueVarArray) goType() string {
+	return "[]byte"
 }
 
 type declTypeString struct {
 	sz string
 }
 
+func (t declTypeString) goType() string {
+	return "string"
+}
+
 type declTypePtr struct {
 	t typespec
 }
 
-type typespec interface{
+func (t declTypePtr) goType() string {
+	return fmt.Sprintf("*%s", t.t.goType())
+}
+
+type typespec interface {
 	goType() string
 }
 
@@ -76,16 +104,20 @@ func (t typeHyper) goType() string {
 	}
 }
 
-type typeFloat struct {}
+type typeFloat struct{}
+
 func (t typeFloat) goType() string { return "float32" }
 
-type typeDouble struct {}
+type typeDouble struct{}
+
 func (t typeDouble) goType() string { return "float64" }
 
-type typeQuadruple struct {}
+type typeQuadruple struct{}
+
 func (t typeQuadruple) goType() string { panic("quadruple") }
 
-type typeBool struct {}
+type typeBool struct{}
+
 func (t typeBool) goType() string { return "bool" }
 
 type typeEnum struct {
@@ -118,7 +150,7 @@ func (t typeStruct) goType() string {
 
 type typeUnion struct {
 	switchDecl decl
-	cases unionCasesDef
+	cases      unionCasesDef
 }
 
 func (t typeUnion) goType() string {
@@ -142,17 +174,17 @@ func (t typeIdent) goType() string { return t.n }
 
 type enumItem struct {
 	name string
-	val string
+	val  string
 }
 
 type unionCasesDef struct {
 	cases []unionCaseDecl
-	def decl
+	def   decl
 }
 
 type unionCaseDecl struct {
 	cases []string
-	body decl
+	body  decl
 }
 
 func emitConst(ident string, val string) {
@@ -161,20 +193,53 @@ func emitConst(ident string, val string) {
 
 func emitTypedef(val decl) {
 	switch v := val.(type) {
-	case declVoid:
-		// Nothing to emit.
-		return
-
 	case declName:
 		fmt.Printf("type %s %s\n", v.n, v.t.goType())
 	}
 }
 
 func emitEnum(ident string, val []enumItem) {
+	fmt.Printf("type %s int\n", ident)
+
+	for _, v := range val {
+		fmt.Printf("const %s = %s\n", v.name, v.val)
+	}
 }
 
 func emitStruct(ident string, val []decl) {
+	fmt.Printf("type %s struct {\n", ident)
+
+	for _, v := range val {
+		switch v := v.(type) {
+		case declName:
+			fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+		}
+	}
+
+	fmt.Printf("}\n")
 }
 
 func emitUnion(ident string, val typeUnion) {
+	fmt.Printf("type %s struct {\n", ident)
+
+	switch v := val.switchDecl.(type) {
+	case declName:
+		fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+	}
+
+	for _, c := range val.cases.cases {
+		switch v := c.body.(type) {
+		case declName:
+			fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+		}
+	}
+
+	if val.cases.def != nil {
+		switch v := val.cases.def.(type) {
+		case declName:
+			fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+		}
+	}
+
+	fmt.Printf("}\n")
 }
