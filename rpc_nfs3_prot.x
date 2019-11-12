@@ -5,23 +5,23 @@ const NFS3_COOKIEVERFSIZE = 8;
 const NFS3_CREATEVERFSIZE = 8;
 const NFS3_WRITEVERFSIZE  = 8;
 
-// typedef unsigned hyper uint64;
-// typedef hyper int64;
-// typedef unsigned int uint32;
-// typedef int int32;
+typedef unsigned hyper uxint64;
+typedef hyper xint64;
+typedef unsigned int uxint32;
+typedef int xint32;
 typedef string filename3<>;
 typedef string nfspath3<>;
-typedef uint64 fileid3;
-typedef uint64 cookie3;
+typedef uxint64 fileid3;
+typedef uxint64 cookie3;
 typedef opaque cookieverf3[NFS3_COOKIEVERFSIZE];
 typedef opaque createverf3[NFS3_CREATEVERFSIZE];
 typedef opaque writeverf3[NFS3_WRITEVERFSIZE];
-typedef uint32 uid3;
-typedef uint32 gid3;
-typedef uint64 size3;
-typedef uint64 offset3;
-typedef uint32 mode3;
-typedef uint32 count3;
+typedef uxint32 uid3;
+typedef uxint32 gid3;
+typedef uxint64 size3;
+typedef uxint64 offset3;
+typedef uxint32 mode3;
+typedef uxint32 count3;
 
 enum nfsstat3 {
   NFS3_OK             = 0,
@@ -65,8 +65,8 @@ enum ftype3 {
   NF3FIFO   = 7 };
 
 struct specdata3 {
-  uint32     specdata1;
-  uint32     specdata2;
+  uxint32     specdata1;
+  uxint32     specdata2;
 };
 
 struct nfs_fh3 {
@@ -74,20 +74,20 @@ struct nfs_fh3 {
 };
 
 struct nfstime3 {
-  uint32   seconds;
-  uint32   nseconds;
+  uxint32   seconds;
+  uxint32   nseconds;
 };
 
 struct fattr3 {
   ftype3     ftype;
   mode3      mode;
-  uint32     nlink;
+  uxint32     nlink;
   uid3       uid;
   gid3       gid;
   size3      size;
   size3      used;
   specdata3  rdev;
-  uint64     fsid;
+  uxint64     fsid;
   fileid3    fileid;
   nfstime3   atime;
   nfstime3   mtime;
@@ -263,12 +263,12 @@ const ACCESS3_EXECUTE = 0x0020;
 
 struct ACCESS3args {
   nfs_fh3  object;
-  uint32   access;
+  uxint32   access;
 };
 
 struct ACCESS3resok {
   post_op_attr   obj_attributes;
-  uint32         access;
+  uxint32         access;
 };
 
 struct ACCESS3resfail {
@@ -654,7 +654,7 @@ struct FSSTAT3resok {
   size3        tfiles;
   size3        ffiles;
   size3        afiles;
-  uint32       invarsec;
+  uxint32       invarsec;
 };
 
 struct FSSTAT3resfail {
@@ -679,17 +679,17 @@ struct FSINFO3args {
 
 struct FSINFO3resok {
   post_op_attr obj_attributes;
-  uint32       rtmax;
-  uint32       rtpref;
-  uint32       rtmult;
-  uint32       wtmax;
-  uint32       wtpref;
-  uint32       wtmult;
-  uint32       dtpref;
+  uxint32       rtmax;
+  uxint32       rtpref;
+  uxint32       rtmult;
+  uxint32       wtmax;
+  uxint32       wtpref;
+  uxint32       wtmult;
+  uxint32       dtpref;
 
   size3        maxfilesize;
   nfstime3     time_delta;
-  uint32       properties;
+  uxint32       properties;
 };
 
 struct FSINFO3resfail {
@@ -709,8 +709,8 @@ struct PATHCONF3args {
 
 struct PATHCONF3resok {
   post_op_attr obj_attributes;
-  uint32       linkmax;
-  uint32       name_max;
+  uxint32       linkmax;
+  uxint32       name_max;
   bool         no_trunc;
   bool         chown_restricted;
   bool         case_insensitive;

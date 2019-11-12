@@ -155,5 +155,6 @@ func main() {
 	var l lexer
 	l.s.Init(f, src, nil, 0)
 
+	fmt.Printf("package gonfs\n")
 	xdrParse(&l)
 }
