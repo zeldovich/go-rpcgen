@@ -14,7 +14,9 @@ type declName struct {
 	n string
 }
 
-type declType interface{}
+type declType interface{
+	goType() string
+}
 
 type declTypeTypespec struct {
 	t typespec
@@ -46,27 +48,72 @@ type declTypePtr struct {
 	t typespec
 }
 
-type typespec interface{}
+type typespec interface{
+	goType() string
+}
 
 type typeInt struct {
 	unsig bool
+}
+
+func (t typeInt) goType() string {
+	if t.unsig {
+		return "uint32"
+	} else {
+		return "int32"
+	}
 }
 
 type typeHyper struct {
 	unsig bool
 }
 
+func (t typeHyper) goType() string {
+	if t.unsig {
+		return "uint64"
+	} else {
+		return "int64"
+	}
+}
+
 type typeFloat struct {}
+func (t typeFloat) goType() string { return "float32" }
+
 type typeDouble struct {}
+func (t typeDouble) goType() string { return "float64" }
+
 type typeQuadruple struct {}
+func (t typeQuadruple) goType() string { panic("quadruple") }
+
 type typeBool struct {}
+func (t typeBool) goType() string { return "bool" }
 
 type typeEnum struct {
 	items []enumItem
 }
 
+func (t typeEnum) goType() string { return "int32" }
+
+func declToNameGotype(d decl) string {
+	switch v := d.(type) {
+	case declName:
+		return fmt.Sprintf("%s %s;", v.n, v.t.goType())
+	}
+
+	return ""
+}
+
 type typeStruct struct {
 	items []decl
+}
+
+func (t typeStruct) goType() string {
+	res := "struct { "
+	for _, i := range t.items {
+		res += declToNameGotype(i)
+	}
+	res += "}"
+	return res
 }
 
 type typeUnion struct {
@@ -74,9 +121,24 @@ type typeUnion struct {
 	cases unionCasesDef
 }
 
+func (t typeUnion) goType() string {
+	res := "struct { "
+	res += declToNameGotype(t.switchDecl)
+	for _, i := range t.cases.cases {
+		res += declToNameGotype(i.body)
+	}
+	if t.cases.def != nil {
+		res += declToNameGotype(t.cases.def)
+	}
+	res += "}"
+	return res
+}
+
 type typeIdent struct {
 	n string
 }
+
+func (t typeIdent) goType() string { return t.n }
 
 type enumItem struct {
 	name string
@@ -98,6 +160,14 @@ func emitConst(ident string, val string) {
 }
 
 func emitTypedef(val decl) {
+	switch v := val.(type) {
+	case declVoid:
+		// Nothing to emit.
+		return
+
+	case declName:
+		fmt.Printf("type %s %s\n", v.n, v.t.goType())
+	}
 }
 
 func emitEnum(ident string, val []enumItem) {
