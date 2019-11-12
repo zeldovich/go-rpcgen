@@ -7,7 +7,6 @@ import (
 	"go/scanner"
 	"go/token"
 	"io/ioutil"
-	"strconv"
 )
 
 type lexer struct {
@@ -22,9 +21,7 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 		return eof
 	}
 
-	fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
-
-	var err error
+	// fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
 
 	switch tok {
 	case token.CONST:
@@ -34,7 +31,7 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 		return KWSTRUCT
 
 	case token.TYPE:
-		lval.ident = "type"
+		lval.str = "type"
 		return IDENT
 
 	case token.SWITCH:
@@ -88,7 +85,7 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 			return KWBOOL
 
 		default:
-			lval.ident = lit
+			lval.str = lit
 			return IDENT
 		}
 
@@ -132,10 +129,7 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 		return '*'
 
 	case token.INT:
-		lval.num, err = strconv.ParseUint(lit, 0, 64)
-		if err != nil {
-			panic(err)
-		}
+		lval.str = lit
 		return CONST
 
 	default:
