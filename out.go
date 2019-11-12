@@ -98,7 +98,11 @@ func (t declTypeString) goType() string {
 }
 
 func (t declTypeString) goXdr(valPtr string) string {
-	return fmt.Sprintf("xdrString(xs, %s);\n", valPtr)
+	sz := t.sz
+	if sz == "" {
+		sz = "-1"
+	}
+	return fmt.Sprintf("xdrString(xs, %s, (*string)(%s));\n", sz, valPtr)
 }
 
 type declTypePtr struct {
@@ -132,9 +136,9 @@ func (t typeInt) goType() string {
 
 func (t typeInt) goXdr(valPtr string) string {
 	if t.unsig {
-		return fmt.Sprintf("xdrU32(xs, %s);\n", valPtr)
+		return fmt.Sprintf("xdrU32(xs, (*uint32)(%s));\n", valPtr)
 	} else {
-		return fmt.Sprintf("xdrS32(xs, %s);\n", valPtr)
+		return fmt.Sprintf("xdrS32(xs, (*int32)(%s));\n", valPtr)
 	}
 }
 
@@ -152,9 +156,9 @@ func (t typeHyper) goType() string {
 
 func (t typeHyper) goXdr(valPtr string) string {
 	if t.unsig {
-		return fmt.Sprintf("xdrU64(xs, %s);\n", valPtr)
+		return fmt.Sprintf("xdrU64(xs, (*uint64)(%s));\n", valPtr)
 	} else {
-		return fmt.Sprintf("xdrS64(xs, %s);\n", valPtr)
+		return fmt.Sprintf("xdrS64(xs, (*int64)(%s));\n", valPtr)
 	}
 }
 
@@ -278,7 +282,7 @@ type typeIdent struct {
 
 func (t typeIdent) goType() string { return t.n }
 func (t typeIdent) goXdr(valPtr string) string {
-	return fmt.Sprintf("((%s)*%s).xdr(xs);\n", t.n, valPtr)
+	return fmt.Sprintf("(*%s)(%s).xdr(xs);\n", t.n, valPtr)
 }
 
 type enumItem struct {
@@ -312,7 +316,7 @@ func emitTypedef(val decl) {
 }
 
 func emitEnum(ident string, val []enumItem) {
-	fmt.Printf("type %s int\n", ident)
+	fmt.Printf("type %s int32\n", ident)
 
 	fmt.Printf("func (v *%s) xdr(xs *xdrState) {\n", ident)
 	fmt.Printf("%s", typeInt{false}.goXdr("v"))
