@@ -16,7 +16,16 @@ package main
 %token KWCASE
 %token KWDEFAULT
 %token KWVOID
-%token <num> NUM
+%token KWOPAQUE
+%token KWSTRING
+%token KWUNSIGNED
+%token KWINT
+%token KWHYPER
+%token KWFLOAT
+%token KWDOUBLE
+%token KWQUADRUPLE
+%token KWBOOL
+%token <num> CONST
 %token <ident> IDENT
 %token '='
 %token ';'
@@ -32,37 +41,72 @@ package main
 
 %%
 
-commands: | commands command ';'
+spec: | spec defn
 
-command: const | typedef | enum | struct | union
+defn: typedef | constdef
 
-const: KWCONST IDENT '=' NUM
+decl: typespec IDENT
+| typespec IDENT '[' val ']'
+| typespec IDENT varlen
+| KWOPAQUE IDENT '[' val ']'
+| KWOPAQUE IDENT varlen
+| KWSTRING IDENT varlen
+| typespec '*' IDENT
+| KWVOID
 
-typedef: KWTYPEDEF typename varname
+varlen: '<' '>'
+| '<' val '>'
 
-typename: IDENT
+val: CONST | IDENT
 
-varname: '*' varname | IDENT | IDENT '<' '>' | IDENT '<' IDENT '>' | IDENT '[' IDENT ']'
+typespec: maybeunsig KWINT
+| maybeunsig KWHYPER
+| KWFLOAT
+| KWDOUBLE
+| KWQUADRUPLE
+| KWBOOL
+| enumtypespec
+| structtypespec
+| uniontypespec
+| IDENT
 
-enum: KWENUM IDENT '{' enumitems '}'
+maybeunsig: | KWUNSIGNED
+
+enumtypespec: KWENUM enumbody
+
+enumbody: '{' enumitems '}'
 
 enumitems: enumitem | enumitems ',' enumitem
 
-enumitem: IDENT | IDENT '=' NUM
+enumitem: IDENT '=' val
 
-struct: KWSTRUCT IDENT '{' structfields '}'
+structtypespec: KWSTRUCT structbody
 
-structfields: | structfields structfield ';'
+structbody: '{' structdecls '}'
 
-structfield: typename varname | KWVOID
+structdecls: | structdecls decl ';'
 
-union: KWUNION IDENT KWSWITCH '(' typename varname ')' '{' unioncases '}'
+uniontypespec: KWUNION unionbody
+
+unionbody: KWSWITCH '(' decl ')' '{' unioncasesdef '}'
+
+unioncasesdef: unioncases | unioncases KWDEFAULT ':' decl ';'
 
 unioncases: | unioncases unioncase
 
-unioncase: unioncaseval ':' structfields
+unioncase: caselist decl ';'
 
-unioncaseval: KWCASE IDENT | KWDEFAULT
+caselist: KWCASE val ':' | caselist KWCASE val ':'
+
+constdef: KWCONST IDENT '=' CONST ';'
+{
+	emitConst($2, $4)
+}
+
+typedef: KWTYPEDEF decl ';'
+| KWENUM IDENT enumbody ';'
+| KWSTRUCT IDENT structbody ';'
+| KWUNION IDENT unionbody ';'
 
 %%
 

@@ -23,6 +23,7 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 	}
 
 	fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
+
 	var err error
 
 	switch tok {
@@ -58,6 +59,33 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 
 		case "void":
 			return KWVOID
+
+		case "string":
+			return KWSTRING
+
+		case "opaque":
+			return KWOPAQUE
+
+		case "unsigned":
+			return KWUNSIGNED
+
+		case "int":
+			return KWINT
+
+		case "hyper":
+			return KWHYPER
+
+		case "float":
+			return KWFLOAT
+
+		case "double":
+			return KWDOUBLE
+
+		case "quadruple":
+			return KWQUADRUPLE
+
+		case "bool":
+			return KWBOOL
 
 		default:
 			lval.ident = lit
@@ -108,9 +136,10 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 		if err != nil {
 			panic(err)
 		}
-		return NUM
+		return CONST
 
 	default:
+		fmt.Printf("NOT HANDLED: pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
 		panic("token not handled")
 	}
 }
