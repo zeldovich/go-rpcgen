@@ -164,17 +164,17 @@ func (t typeHyper) goXdr(valPtr string) string {
 
 type typeFloat struct{}
 
-func (t typeFloat) goType() string { return "float32" }
+func (t typeFloat) goType() string             { return "float32" }
 func (t typeFloat) goXdr(valPtr string) string { panic("x") }
 
 type typeDouble struct{}
 
-func (t typeDouble) goType() string { return "float64" }
+func (t typeDouble) goType() string             { return "float64" }
 func (t typeDouble) goXdr(valPtr string) string { panic("x") }
 
 type typeQuadruple struct{}
 
-func (t typeQuadruple) goType() string { panic("quadruple") }
+func (t typeQuadruple) goType() string             { panic("quadruple") }
 func (t typeQuadruple) goXdr(valPtr string) string { panic("x") }
 
 type typeBool struct{}
@@ -188,7 +188,7 @@ type typeEnum struct {
 	items []enumItem
 }
 
-func (t typeEnum) goType() string { return "int32" }
+func (t typeEnum) goType() string             { return "int32" }
 func (t typeEnum) goXdr(valPtr string) string { panic("x") }
 
 func declToNameGotype(d decl) string {
