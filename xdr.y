@@ -15,6 +15,10 @@ package main
   unionCaseDecls []unionCaseDecl;
   unionCaseDecl unionCaseDecl;
   strs []string;
+  progCall progCall;
+  progCalls []progCall;
+  progVer progVer;
+  progVers []progVer;
 }
 
 %token KWCONST
@@ -63,6 +67,11 @@ package main
 %type <unionCaseDecls> unioncases
 %type <unionCaseDecl> unioncase
 %type <strs> caselist
+%type <str> progtype
+%type <progCall> progcall
+%type <progCalls> progcalls
+%type <progVers> progvers
+%type <progVer> progver
 
 %%
 
@@ -178,16 +187,24 @@ typedef: KWTYPEDEF decl ';'
   { emitUnion($2, $3) }
 
 progdef: KWPROGRAM IDENT '{' progvers '}' '=' CONST ';'
+  { emitProg(progDef{$2, $4, $7}) }
 
-progvers: | progvers progver
+progvers: { $$ = nil } | progvers progver
+  { $$ = append($1, $2) }
 
 progver: KWVERSION IDENT '{' progcalls '}' '=' CONST ';'
+  { $$ = progVer{$2, $4, $7} }
 
-progcalls: | progcalls progcall
+progcalls: { $$ = nil } | progcalls progcall
+  { $$ = append($1, $2) }
 
 progcall: progtype IDENT '(' progtype ')' '=' CONST ';'
+  { $$ = progCall{$2, $4, $1, $7} }
 
-progtype: KWVOID | IDENT
+progtype: KWVOID
+  { $$ = "" }
+| IDENT
+  { $$ = $1 }
 
 %%
 

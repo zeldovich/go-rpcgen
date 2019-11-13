@@ -316,6 +316,36 @@ type unionCaseDecl struct {
 	body  decl
 }
 
+type progCall struct {
+	name string
+	arg string
+	res string
+	id string
+}
+
+type progVer struct {
+	name string
+	calls []progCall
+	id string
+}
+
+type progDef struct {
+	name string
+	vers []progVer
+	id string
+}
+
+func emitProg(d progDef) {
+	fmt.Printf("const %s = %s\n", d.name, d.id)
+	for _, v := range d.vers {
+		fmt.Printf("const %s = %s\n", v.name, v.id)
+
+		for _, c := range v.calls {
+			fmt.Printf("const %s = %s\n", c.name, c.id)
+		}
+	}
+}
+
 func emitConst(ident string, val string) {
 	fmt.Printf("const %s = %s\n", ident, val)
 }
