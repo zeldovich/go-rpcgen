@@ -189,6 +189,33 @@ struct diropargs3 {
 };
 
 
+program NFS_PROGRAM {
+  version NFS_V3 {
+    void            NFSPROC3_NULL(void)                    = 0;
+    GETATTR3res     NFSPROC3_GETATTR(GETATTR3args)         = 1;
+    SETATTR3res     NFSPROC3_SETATTR(SETATTR3args)         = 2;
+    LOOKUP3res      NFSPROC3_LOOKUP(LOOKUP3args)           = 3;
+    ACCESS3res      NFSPROC3_ACCESS(ACCESS3args)           = 4;
+    READLINK3res    NFSPROC3_READLINK(READLINK3args)       = 5;
+    READ3res        NFSPROC3_READ(READ3args)               = 6;
+    WRITE3res       NFSPROC3_WRITE(WRITE3args)             = 7;
+    CREATE3res      NFSPROC3_CREATE(CREATE3args)           = 8;
+    MKDIR3res       NFSPROC3_MKDIR(MKDIR3args)             = 9;
+    SYMLINK3res     NFSPROC3_SYMLINK(SYMLINK3args)         = 10;
+    MKNOD3res       NFSPROC3_MKNOD(MKNOD3args)             = 11;
+    REMOVE3res      NFSPROC3_REMOVE(REMOVE3args)           = 12;
+    RMDIR3res       NFSPROC3_RMDIR(RMDIR3args)             = 13;
+    RENAME3res      NFSPROC3_RENAME(RENAME3args)           = 14;
+    LINK3res        NFSPROC3_LINK(LINK3args)               = 15;
+    READDIR3res     NFSPROC3_READDIR(READDIR3args)         = 16;
+    READDIRPLUS3res NFSPROC3_READDIRPLUS(READDIRPLUS3args) = 17;
+    FSSTAT3res      NFSPROC3_FSSTAT(FSSTAT3args)           = 18;
+    FSINFO3res      NFSPROC3_FSINFO(FSINFO3args)           = 19;
+    PATHCONF3res    NFSPROC3_PATHCONF(PATHCONF3args)       = 20;
+    COMMIT3res      NFSPROC3_COMMIT(COMMIT3args)           = 21;
+} = 3;
+} = 100003;
+
 struct GETATTR3args {
   nfs_fh3  object;
 };
@@ -749,3 +776,69 @@ case NFS3_OK:
 default:
   COMMIT3resfail resfail;
 };
+
+
+const MNTPATHLEN3 = 1024;   /* Maximum bytes in a path name */
+const MNTNAMLEN3  = 255;    /* Maximum bytes in a name */
+const FHSIZE3    = 64;      /* Maximum bytes in a V3 file handle */
+
+typedef opaque fhandle3<FHSIZE3>;
+typedef string dirpath3<MNTPATHLEN3>;
+typedef string name3<MNTNAMLEN3>;
+
+enum mountstat3 {
+   MNT3_OK = 0,                 /* no error */
+   MNT3ERR_PERM = 1,            /* Not owner */
+   MNT3ERR_NOENT = 2,           /* No such file or directory */
+   MNT3ERR_IO = 5,              /* I/O error */
+   MNT3ERR_ACCES = 13,          /* Permission denied */
+   MNT3ERR_NOTDIR = 20,         /* Not a directory */
+   MNT3ERR_INVAL = 22,          /* Invalid argument */
+   MNT3ERR_NAMETOOLONG = 63,    /* Filename too long */
+   MNT3ERR_NOTSUPP = 10004,     /* Operation not supported */
+   MNT3ERR_SERVERFAULT = 10006  /* A failure on the server */ };
+
+
+program MOUNT_PROGRAM {
+  version MOUNT_V3 {
+    void        MOUNTPROC3_NULL(void)     = 0;
+    mountres3   MOUNTPROC3_MNT(dirpath3)  = 1;
+    mountopt3   MOUNTPROC3_DUMP(void)     = 2;
+    void        MOUNTPROC3_UMNT(dirpath3) = 3;
+    void        MOUNTPROC3_UMNTALL(void)  = 4;
+    exportsopt3 MOUNTPROC3_EXPORT(void)   = 5;
+  } = 3;
+} = 100005;
+
+struct mountres3_ok {
+  fhandle3   fhandle;
+  int        auth_flavors<>;
+};
+
+union mountres3 switch (mountstat3 fhs_status) {
+case MNT3_OK:
+  mountres3_ok  mountinfo;
+default:
+  void;
+};
+
+struct mount3 {
+  name3    ml_hostname;
+  dirpath3 ml_directory;
+  mount3   *ml_next;
+};
+
+typedef mount3 *mountopt3;
+
+struct groups3 {
+  name3   gr_name;
+  groups3 *gr_next;
+};
+
+struct exports3 {
+  dirpath3 ex_dir;
+  groups3  *ex_groups;
+  exports3 *ex_next;
+};
+
+typedef exports3 *exportsopt3;

@@ -58,7 +58,23 @@ func (t declTypeVarArray) goType() string {
 }
 
 func (t declTypeVarArray) goXdr(valPtr string) string {
-	panic("x")
+	var res string
+	res += fmt.Sprintf("{\n")
+	res += fmt.Sprintf("var __arraysz uint32\n")
+	res += fmt.Sprintf("if xs.encoding() { __arraysz = len(*%s); }\n", valPtr)
+	res += fmt.Sprintf("%s\n", typeInt{true}.goXdr("&__arraysz"))
+	if t.sz != "" {
+		res += fmt.Sprintf("if __arraysz > %s { xs.error(\"array too large\") } else {\n", t.sz)
+	}
+	res += fmt.Sprintf("if xs.decoding() { *%s = make([]%s, __arraysz); }\n", valPtr, t.t.goType())
+	res += fmt.Sprintf("for i := 0; i < __arraysz; i++ {\n")
+	res += fmt.Sprintf("%s\n", t.t.goXdr(fmt.Sprintf("&(*(%s)[i])", valPtr)))
+	res += fmt.Sprintf("}\n")
+	if t.sz != "" {
+		res += fmt.Sprintf("}\n")
+	}
+	res += fmt.Sprintf("}\n")
+	return res
 }
 
 type declTypeOpaqueArray struct {

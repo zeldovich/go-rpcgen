@@ -21,7 +21,7 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 		return eof
 	}
 
-	// fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
+	fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
 
 	switch tok {
 	case token.CONST:
@@ -83,6 +83,12 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 
 		case "bool":
 			return KWBOOL
+
+		case "program":
+			return KWPROGRAM
+
+		case "version":
+			return KWVERSION
 
 		default:
 			lval.str = lit

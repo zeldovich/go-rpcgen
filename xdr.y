@@ -35,6 +35,8 @@ package main
 %token KWDOUBLE
 %token KWQUADRUPLE
 %token KWBOOL
+%token KWPROGRAM
+%token KWVERSION
 %token <str> CONST
 %token <str> IDENT
 %token '='
@@ -66,7 +68,7 @@ package main
 
 spec: | spec defn
 
-defn: typedef | constdef
+defn: typedef | constdef | progdef
 
 decl: typespec IDENT
   { $$ = declName{declTypeTypespec{$1}, $2} }
@@ -174,6 +176,18 @@ typedef: KWTYPEDEF decl ';'
   { emitStruct($2, $3) }
 | KWUNION IDENT unionbody ';'
   { emitUnion($2, $3) }
+
+progdef: KWPROGRAM IDENT '{' progvers '}' '=' CONST ';'
+
+progvers: | progvers progver
+
+progver: KWVERSION IDENT '{' progcalls '}' '=' CONST ';'
+
+progcalls: | progcalls progcall
+
+progcall: progtype IDENT '(' progtype ')' '=' CONST ';'
+
+progtype: KWVOID | IDENT
 
 %%
 
