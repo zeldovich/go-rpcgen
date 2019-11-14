@@ -91,7 +91,7 @@ func (t declTypeOpaqueArray) goType() string {
 }
 
 func (t declTypeOpaqueArray) goXdr(valPtr string) string {
-	return fmt.Sprintf("XdrArray(xs, %s, (*%s)[:]);\n", t.sz, valPtr)
+	return fmt.Sprintf("XdrArray(xs, (*%s)[:]);\n", valPtr)
 }
 
 type declTypeOpaqueVarArray struct {

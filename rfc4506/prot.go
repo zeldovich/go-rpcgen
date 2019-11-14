@@ -60,19 +60,19 @@ func (v *Cookie3) Xdr(xs *XdrState) {
 type Cookieverf3 [NFS3_COOKIEVERFSIZE]byte
 
 func (v *Cookieverf3) Xdr(xs *XdrState) {
-	XdrArray(xs, NFS3_COOKIEVERFSIZE, (*v)[:])
+	XdrArray(xs, (*v)[:])
 }
 
 type Createverf3 [NFS3_CREATEVERFSIZE]byte
 
 func (v *Createverf3) Xdr(xs *XdrState) {
-	XdrArray(xs, NFS3_CREATEVERFSIZE, (*v)[:])
+	XdrArray(xs, (*v)[:])
 }
 
 type Writeverf3 [NFS3_WRITEVERFSIZE]byte
 
 func (v *Writeverf3) Xdr(xs *XdrState) {
-	XdrArray(xs, NFS3_WRITEVERFSIZE, (*v)[:])
+	XdrArray(xs, (*v)[:])
 }
 
 type Uid3 Uint32

@@ -145,7 +145,7 @@ func (v *Accepted_reply) Xdr(xs *XdrState) {
 	(*Accept_stat)(&((&((v).Reply_data)).Stat)).Xdr(xs)
 	switch (&((v).Reply_data)).Stat {
 	case SUCCESS:
-		XdrArray(xs, 0, (*&((&((v).Reply_data)).Results))[:])
+		XdrArray(xs, (*&((&((v).Reply_data)).Results))[:])
 	case PROG_MISMATCH:
 		XdrU32(xs, (*uint32)(&((&((&((v).Reply_data)).Mismatch_info)).Low)))
 		XdrU32(xs, (*uint32)(&((&((&((v).Reply_data)).Mismatch_info)).High)))
