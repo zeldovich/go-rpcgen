@@ -46,7 +46,7 @@ func (xs *XdrState) EncodingSetSize(arraysz *uint32, len int) {
 	}
 
 	if len > math.MaxUint32 {
-		xs.setError(errors.New("length too large"))
+		xs.SetError("length too large")
 		return
 	}
 
@@ -57,8 +57,8 @@ func (xs *XdrState) Decoding() bool {
 	return xs.err == nil && xs.reader != nil
 }
 
-func (xs *XdrState) setError(e error) {
-	xs.err = e
+func (xs *XdrState) SetError(s string) {
+	xs.err = errors.New(s)
 }
 
 func XdrBool(xs *XdrState, v *bool) {

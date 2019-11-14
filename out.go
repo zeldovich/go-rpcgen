@@ -69,7 +69,7 @@ func (t declTypeVarArray) goXdr(valPtr string) string {
 	res += fmt.Sprintf("xs.EncodingSetSize(&__arraysz, len(*%s));\n", valPtr)
 	res += fmt.Sprintf("%s\n", typeInt{true}.goXdr("&__arraysz"))
 	if t.sz != "" {
-		res += fmt.Sprintf("if __arraysz > %s { xs.error(\"array too large\") } else {\n", t.sz)
+		res += fmt.Sprintf("if __arraysz > %s { xs.SetError(\"array too large\") } else {\n", t.sz)
 	}
 	res += fmt.Sprintf("if xs.Decoding() { *%s = make([]%s, __arraysz); }\n", valPtr, t.t.goType())
 	res += fmt.Sprintf("for i := uint64(0); i < uint64(__arraysz); i++ {\n")

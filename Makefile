@@ -8,3 +8,4 @@ $(GOPATH)/bin/go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
 
 %.go: %.x $(GOPATH)/bin/go-rpcgen
 	$(GOPATH)/bin/go-rpcgen -i $< -o $@
+	go vet $@

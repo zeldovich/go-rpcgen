@@ -159,7 +159,7 @@ type Rejected_reply struct {
 		Low  uint32
 		High uint32
 	}
-	Stat Auth_stat
+	Astat Auth_stat
 }
 
 func (v *Rejected_reply) Xdr(xs *XdrState) {
@@ -169,7 +169,7 @@ func (v *Rejected_reply) Xdr(xs *XdrState) {
 		XdrU32(xs, (*uint32)(&(&(v.Mismatch_info).Low)))
 		XdrU32(xs, (*uint32)(&(&(v.Mismatch_info).High)))
 	case AUTH_ERROR:
-		(*Auth_stat)(&(v.Stat)).Xdr(xs)
+		(*Auth_stat)(&(v.Astat)).Xdr(xs)
 	}
 }
 
@@ -192,7 +192,7 @@ func (v *Auth_unix) Xdr(xs *XdrState) {
 		XdrU32(xs, (*uint32)(&__arraysz))
 
 		if __arraysz > 16 {
-			xs.error("array too large")
+			xs.SetError("array too large")
 		} else {
 			if xs.Decoding() {
 				*&(v.Gids) = make([]uint32, __arraysz)

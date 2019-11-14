@@ -94,7 +94,7 @@ case RPC_MISMATCH:
       unsigned int high;
    } mismatch_info;
 case AUTH_ERROR:
-   auth_stat stat;
+   auth_stat astat;
 };
 
 
