@@ -1,4 +1,4 @@
-package gonfs
+package xdr
 
 import (
 	"errors"
@@ -8,6 +8,10 @@ import (
 
 const TRUE = true
 const FALSE = false
+
+type Xdrable interface {
+	Xdr(xs *XdrState)
+}
 
 type XdrState struct {
 	// err != nil means error state
@@ -59,6 +63,10 @@ func (xs *XdrState) Decoding() bool {
 
 func (xs *XdrState) SetError(s string) {
 	xs.err = errors.New(s)
+}
+
+func (xs *XdrState) Error() error {
+	return xs.err
 }
 
 func XdrBool(xs *XdrState, v *bool) {
