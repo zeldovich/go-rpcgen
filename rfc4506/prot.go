@@ -1,4 +1,4 @@
-package gonfs
+package rfc4506
 
 import . "github.com/zeldovich/go-rpcgen/xdr"
 

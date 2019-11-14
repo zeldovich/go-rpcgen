@@ -1,4 +1,4 @@
-package gonfs
+package rfc1057
 
 import . "github.com/zeldovich/go-rpcgen/xdr"
 

@@ -6,6 +6,6 @@ $(GOPATH)/bin/go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
 	go generate
 	go install .
 
-%.go: %.x $(GOPATH)/bin/go-rpcgen
-	$(GOPATH)/bin/go-rpcgen -i $< -o $@
+%/prot.go: %/prot.x $(GOPATH)/bin/go-rpcgen
+	$(GOPATH)/bin/go-rpcgen -i $< -o $@ -p $(patsubst %/prot.go,%,$@)
 	go vet $@

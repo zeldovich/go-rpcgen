@@ -12,6 +12,7 @@ import (
 
 var inputFile = flag.String("i", "", "Input file (.x)")
 var outputFile = flag.String("o", "", "Output file (.go)")
+var outputPackage = flag.String("p", "main", "Output package name")
 var out io.Writer
 
 func main() {
@@ -47,7 +48,7 @@ func main() {
 	defer os.Remove(outTmp)
 
 	out = outf
-	fmt.Fprintf(out, "package gonfs\n")
+	fmt.Fprintf(out, "package %s\n", *outputPackage)
 	fmt.Fprintf(out, "import . \"github.com/zeldovich/go-rpcgen/xdr\"\n")
 	xdrParse(&l)
 	outf.Close()
