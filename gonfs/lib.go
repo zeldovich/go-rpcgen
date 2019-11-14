@@ -1,7 +1,9 @@
 package gonfs
 
 import (
+	"errors"
 	"io"
+	"math"
 )
 
 const TRUE = true
@@ -16,6 +18,31 @@ type xdrState struct {
 
 	// writer != nil means we are writing
 	writer io.Writer
+}
+
+func (xs *xdrState) encodingSetSize(arraysz *uint32, len int) {
+	if xs.err != nil {
+		return
+	}
+
+	if xs.writer == nil {
+		return
+	}
+
+	if len > math.MaxUint32 {
+		xs.setError(errors.New("length too large"))
+		return
+	}
+
+	*arraysz = uint32(len)
+}
+
+func (xs *xdrState) decoding() bool {
+	return xs.err == nil && xs.reader != nil
+}
+
+func (xs *xdrState) setError(e error) {
+	xs.err = e
 }
 
 func xdrBool(xs *xdrState, v *bool) {

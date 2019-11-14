@@ -61,14 +61,14 @@ func (t declTypeVarArray) goXdr(valPtr string) string {
 	var res string
 	res += fmt.Sprintf("{\n")
 	res += fmt.Sprintf("var __arraysz uint32\n")
-	res += fmt.Sprintf("if xs.encoding() { __arraysz = len(*%s); }\n", valPtr)
+	res += fmt.Sprintf("xs.encodingSetSize(&__arraysz, len(*%s));\n", valPtr)
 	res += fmt.Sprintf("%s\n", typeInt{true}.goXdr("&__arraysz"))
 	if t.sz != "" {
 		res += fmt.Sprintf("if __arraysz > %s { xs.error(\"array too large\") } else {\n", t.sz)
 	}
 	res += fmt.Sprintf("if xs.decoding() { *%s = make([]%s, __arraysz); }\n", valPtr, t.t.goType())
-	res += fmt.Sprintf("for i := 0; i < __arraysz; i++ {\n")
-	res += fmt.Sprintf("%s\n", t.t.goXdr(fmt.Sprintf("&(*(%s)[i])", valPtr)))
+	res += fmt.Sprintf("for i := uint64(0); i < uint64(__arraysz); i++ {\n")
+	res += fmt.Sprintf("%s\n", t.t.goXdr(fmt.Sprintf("&((*(%s))[i])", valPtr)))
 	res += fmt.Sprintf("}\n")
 	if t.sz != "" {
 		res += fmt.Sprintf("}\n")
@@ -102,7 +102,7 @@ func (t declTypeOpaqueVarArray) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("xdrVarArray(xs, %s, %s);\n", sz, valPtr)
+	return fmt.Sprintf("xdrVarArray(xs, %s, (*[]byte)(%s));\n", sz, valPtr)
 }
 
 type declTypeString struct {
@@ -126,11 +126,11 @@ type declTypePtr struct {
 }
 
 func (t declTypePtr) goType() string {
-	return fmt.Sprintf("*%s", t.t.goType())
+	return fmt.Sprintf("struct { p *%s }", t.t.goType())
 }
 
 func (t declTypePtr) goXdr(valPtr string) string {
-	return t.t.goXdr(fmt.Sprintf("*(%s)", valPtr))
+	return t.t.goXdr(fmt.Sprintf("(%s).p", valPtr))
 }
 
 type typespec interface {
