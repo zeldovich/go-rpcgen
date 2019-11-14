@@ -66,12 +66,12 @@ func (t declTypeVarArray) goXdr(valPtr string) string {
 	var res string
 	res += fmt.Sprintf("{\n")
 	res += fmt.Sprintf("var __arraysz uint32\n")
-	res += fmt.Sprintf("xs.encodingSetSize(&__arraysz, len(*%s));\n", valPtr)
+	res += fmt.Sprintf("xs.EncodingSetSize(&__arraysz, len(*%s));\n", valPtr)
 	res += fmt.Sprintf("%s\n", typeInt{true}.goXdr("&__arraysz"))
 	if t.sz != "" {
 		res += fmt.Sprintf("if __arraysz > %s { xs.error(\"array too large\") } else {\n", t.sz)
 	}
-	res += fmt.Sprintf("if xs.decoding() { *%s = make([]%s, __arraysz); }\n", valPtr, t.t.goType())
+	res += fmt.Sprintf("if xs.Decoding() { *%s = make([]%s, __arraysz); }\n", valPtr, t.t.goType())
 	res += fmt.Sprintf("for i := uint64(0); i < uint64(__arraysz); i++ {\n")
 	res += fmt.Sprintf("%s\n", t.t.goXdr(fmt.Sprintf("&((*(%s))[i])", valPtr)))
 	res += fmt.Sprintf("}\n")
@@ -91,7 +91,7 @@ func (t declTypeOpaqueArray) goType() string {
 }
 
 func (t declTypeOpaqueArray) goXdr(valPtr string) string {
-	return fmt.Sprintf("xdrArray(xs, %s, (*%s)[:]);\n", t.sz, valPtr)
+	return fmt.Sprintf("XdrArray(xs, %s, (*%s)[:]);\n", t.sz, valPtr)
 }
 
 type declTypeOpaqueVarArray struct {
@@ -107,7 +107,7 @@ func (t declTypeOpaqueVarArray) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("xdrVarArray(xs, %s, (*[]byte)(%s));\n", sz, valPtr)
+	return fmt.Sprintf("XdrVarArray(xs, %s, (*[]byte)(%s));\n", sz, valPtr)
 }
 
 type declTypeString struct {
@@ -123,7 +123,7 @@ func (t declTypeString) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("xdrString(xs, %s, (*string)(%s));\n", sz, valPtr)
+	return fmt.Sprintf("XdrString(xs, %s, (*string)(%s));\n", sz, valPtr)
 }
 
 type declTypePtr struct {
@@ -157,9 +157,9 @@ func (t typeInt) goType() string {
 
 func (t typeInt) goXdr(valPtr string) string {
 	if t.unsig {
-		return fmt.Sprintf("xdrU32(xs, (*uint32)(%s));\n", valPtr)
+		return fmt.Sprintf("XdrU32(xs, (*uint32)(%s));\n", valPtr)
 	} else {
-		return fmt.Sprintf("xdrS32(xs, (*int32)(%s));\n", valPtr)
+		return fmt.Sprintf("XdrS32(xs, (*int32)(%s));\n", valPtr)
 	}
 }
 
@@ -177,9 +177,9 @@ func (t typeHyper) goType() string {
 
 func (t typeHyper) goXdr(valPtr string) string {
 	if t.unsig {
-		return fmt.Sprintf("xdrU64(xs, (*uint64)(%s));\n", valPtr)
+		return fmt.Sprintf("XdrU64(xs, (*uint64)(%s));\n", valPtr)
 	} else {
-		return fmt.Sprintf("xdrS64(xs, (*int64)(%s));\n", valPtr)
+		return fmt.Sprintf("XdrS64(xs, (*int64)(%s));\n", valPtr)
 	}
 }
 
@@ -202,7 +202,7 @@ type typeBool struct{}
 
 func (t typeBool) goType() string { return "bool" }
 func (t typeBool) goXdr(valPtr string) string {
-	return fmt.Sprintf("xdrBool(xs, %s);\n", valPtr)
+	return fmt.Sprintf("XdrBool(xs, %s);\n", valPtr)
 }
 
 type typeEnum struct {
@@ -303,7 +303,7 @@ type typeIdent struct {
 
 func (t typeIdent) goType() string { return i(t.n) }
 func (t typeIdent) goXdr(valPtr string) string {
-	return fmt.Sprintf("(*%s)(%s).xdr(xs);\n", i(t.n), valPtr)
+	return fmt.Sprintf("(*%s)(%s).Xdr(xs);\n", i(t.n), valPtr)
 }
 
 type enumItem struct {
@@ -341,83 +341,83 @@ type progDef struct {
 }
 
 func emitProg(d progDef) {
-	fmt.Printf("const %s = %s\n", i(d.name), d.id)
+	fmt.Fprintf(out, "const %s = %s\n", i(d.name), d.id)
 	for _, v := range d.vers {
-		fmt.Printf("const %s = %s\n", i(v.name), v.id)
+		fmt.Fprintf(out, "const %s = %s\n", i(v.name), v.id)
 
 		for _, c := range v.calls {
-			fmt.Printf("const %s = %s\n", i(c.name), c.id)
+			fmt.Fprintf(out, "const %s = %s\n", i(c.name), c.id)
 		}
 	}
 }
 
 func emitConst(ident string, val string) {
-	fmt.Printf("const %s = %s\n", ident, val)
+	fmt.Fprintf(out, "const %s = %s\n", ident, val)
 }
 
 func emitTypedef(val decl) {
 	switch v := val.(type) {
 	case declName:
-		fmt.Printf("type %s %s\n", i(v.n), v.t.goType())
+		fmt.Fprintf(out, "type %s %s\n", i(v.n), v.t.goType())
 
-		fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(v.n))
-		fmt.Printf("%s", v.t.goXdr("v"))
-		fmt.Printf("}\n")
+		fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(v.n))
+		fmt.Fprintf(out, "%s", v.t.goXdr("v"))
+		fmt.Fprintf(out, "}\n")
 	}
 }
 
 func emitEnum(ident string, val []enumItem) {
-	fmt.Printf("type %s int32\n", i(ident))
+	fmt.Fprintf(out, "type %s int32\n", i(ident))
 
-	fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(ident))
-	fmt.Printf("%s", typeInt{false}.goXdr("v"))
-	fmt.Printf("}\n")
+	fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(ident))
+	fmt.Fprintf(out, "%s", typeInt{false}.goXdr("v"))
+	fmt.Fprintf(out, "}\n")
 
 	for _, v := range val {
-		fmt.Printf("const %s = %s\n", i(v.name), v.val)
+		fmt.Fprintf(out, "const %s = %s\n", i(v.name), v.val)
 	}
 }
 
 func emitStruct(ident string, val []decl) {
-	fmt.Printf("type %s struct {\n", i(ident))
+	fmt.Fprintf(out, "type %s struct {\n", i(ident))
 	for _, v := range val {
 		switch v := v.(type) {
 		case declName:
-			fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
+			fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
-	fmt.Printf("}\n")
+	fmt.Fprintf(out, "}\n")
 
-	fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(ident))
-	fmt.Printf("%s", typeStruct{val}.goXdr("v"))
-	fmt.Printf("}\n")
+	fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(ident))
+	fmt.Fprintf(out, "%s", typeStruct{val}.goXdr("v"))
+	fmt.Fprintf(out, "}\n")
 }
 
 func emitUnion(ident string, val typeUnion) {
-	fmt.Printf("type %s struct {\n", i(ident))
+	fmt.Fprintf(out, "type %s struct {\n", i(ident))
 
 	switch v := val.switchDecl.(type) {
 	case declName:
-		fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
+		fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
 	}
 
 	for _, c := range val.cases.cases {
 		switch v := c.body.(type) {
 		case declName:
-			fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
+			fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
 
 	if val.cases.def != nil {
 		switch v := val.cases.def.(type) {
 		case declName:
-			fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
+			fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
 
-	fmt.Printf("}\n")
+	fmt.Fprintf(out, "}\n")
 
-	fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(ident))
-	fmt.Printf("%s", val.goXdr("v"))
-	fmt.Printf("}\n")
+	fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(ident))
+	fmt.Fprintf(out, "%s", val.goXdr("v"))
+	fmt.Fprintf(out, "}\n")
 }

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"go/scanner"
 	"go/token"
-	"io/ioutil"
 )
 
 type lexer struct {
@@ -146,21 +145,4 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 
 func (l *lexer) Error(e string) {
 	panic(e)
-}
-
-func main() {
-	filename := "rpc_nfs3_prot.x"
-	src, err := ioutil.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
-
-	fset := token.NewFileSet()
-	f := fset.AddFile(filename, -1, len(src))
-
-	var l lexer
-	l.s.Init(f, src, nil, 0)
-
-	fmt.Printf("package gonfs\n")
-	xdrParse(&l)
 }
