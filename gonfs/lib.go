@@ -9,7 +9,7 @@ import (
 const TRUE = true
 const FALSE = false
 
-type xdrState struct {
+type XdrState struct {
 	// err != nil means error state
 	err error
 
@@ -20,7 +20,7 @@ type xdrState struct {
 	writer io.Writer
 }
 
-func (xs *xdrState) encodingSetSize(arraysz *uint32, len int) {
+func (xs *XdrState) encodingSetSize(arraysz *uint32, len int) {
 	if xs.err != nil {
 		return
 	}
@@ -37,34 +37,34 @@ func (xs *xdrState) encodingSetSize(arraysz *uint32, len int) {
 	*arraysz = uint32(len)
 }
 
-func (xs *xdrState) decoding() bool {
+func (xs *XdrState) decoding() bool {
 	return xs.err == nil && xs.reader != nil
 }
 
-func (xs *xdrState) setError(e error) {
+func (xs *XdrState) setError(e error) {
 	xs.err = e
 }
 
-func xdrBool(xs *xdrState, v *bool) {
+func xdrBool(xs *XdrState, v *bool) {
 }
 
-func xdrS32(xs *xdrState, v *int32) {
+func xdrS32(xs *XdrState, v *int32) {
 }
 
-func xdrU32(xs *xdrState, v *uint32) {
+func xdrU32(xs *XdrState, v *uint32) {
 }
 
-func xdrS64(xs *xdrState, v *int64) {
+func xdrS64(xs *XdrState, v *int64) {
 }
 
-func xdrU64(xs *xdrState, v *uint64) {
+func xdrU64(xs *XdrState, v *uint64) {
 }
 
-func xdrVarArray(xs *xdrState, maxlen int, v *[]byte) {
+func xdrVarArray(xs *XdrState, maxlen int, v *[]byte) {
 }
 
-func xdrArray(xs *xdrState, len int, v []byte) {
+func xdrArray(xs *XdrState, len int, v []byte) {
 }
 
-func xdrString(xs *xdrState, maxlen int, v *string) {
+func xdrString(xs *XdrState, maxlen int, v *string) {
 }

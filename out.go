@@ -2,7 +2,12 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
+
+func i(ident string) string {
+	return strings.ToUpper(ident[:1]) + ident[1:]
+}
 
 type decl interface{}
 
@@ -126,11 +131,11 @@ type declTypePtr struct {
 }
 
 func (t declTypePtr) goType() string {
-	return fmt.Sprintf("struct { p *%s }", t.t.goType())
+	return fmt.Sprintf("struct { P *%s }", t.t.goType())
 }
 
 func (t declTypePtr) goXdr(valPtr string) string {
-	return t.t.goXdr(fmt.Sprintf("(%s).p", valPtr))
+	return t.t.goXdr(fmt.Sprintf("(%s).P", valPtr))
 }
 
 type typespec interface {
@@ -210,7 +215,7 @@ func (t typeEnum) goXdr(valPtr string) string { panic("x") }
 func declToNameGotype(d decl) string {
 	switch v := d.(type) {
 	case declName:
-		return fmt.Sprintf("%s %s;", v.n, v.t.goType())
+		return fmt.Sprintf("%s %s;", i(v.n), v.t.goType())
 	}
 
 	return ""
@@ -234,7 +239,7 @@ func (t typeStruct) goXdr(valPtr string) string {
 	for _, v := range t.items {
 		switch v := v.(type) {
 		case declName:
-			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, v.n))
+			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, i(v.n)))
 		}
 	}
 	return res
@@ -265,7 +270,7 @@ func (t typeUnion) goXdr(valPtr string) string {
 	case declVoid:
 		panic("void union switch")
 	case declName:
-		switchName = fmt.Sprintf("%s.%s", valPtr, v.n)
+		switchName = fmt.Sprintf("%s.%s", valPtr, i(v.n))
 		res += v.t.goXdr(fmt.Sprintf("&(%s)", switchName))
 	}
 	res += fmt.Sprintf("switch %s {\n", switchName)
@@ -278,14 +283,14 @@ func (t typeUnion) goXdr(valPtr string) string {
 		}
 		switch v := c.body.(type) {
 		case declName:
-			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, v.n))
+			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, i(v.n)))
 		}
 	}
 	if t.cases.def != nil {
 		res += "default:\n"
 		switch v := t.cases.def.(type) {
 		case declName:
-			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, v.n))
+			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, i(v.n)))
 		}
 	}
 	res += "}\n"
@@ -296,9 +301,9 @@ type typeIdent struct {
 	n string
 }
 
-func (t typeIdent) goType() string { return t.n }
+func (t typeIdent) goType() string { return i(t.n) }
 func (t typeIdent) goXdr(valPtr string) string {
-	return fmt.Sprintf("(*%s)(%s).xdr(xs);\n", t.n, valPtr)
+	return fmt.Sprintf("(*%s)(%s).xdr(xs);\n", i(t.n), valPtr)
 }
 
 type enumItem struct {
@@ -336,12 +341,12 @@ type progDef struct {
 }
 
 func emitProg(d progDef) {
-	fmt.Printf("const %s = %s\n", d.name, d.id)
+	fmt.Printf("const %s = %s\n", i(d.name), d.id)
 	for _, v := range d.vers {
-		fmt.Printf("const %s = %s\n", v.name, v.id)
+		fmt.Printf("const %s = %s\n", i(v.name), v.id)
 
 		for _, c := range v.calls {
-			fmt.Printf("const %s = %s\n", c.name, c.id)
+			fmt.Printf("const %s = %s\n", i(c.name), c.id)
 		}
 	}
 }
@@ -353,66 +358,66 @@ func emitConst(ident string, val string) {
 func emitTypedef(val decl) {
 	switch v := val.(type) {
 	case declName:
-		fmt.Printf("type %s %s\n", v.n, v.t.goType())
+		fmt.Printf("type %s %s\n", i(v.n), v.t.goType())
 
-		fmt.Printf("func (v *%s) xdr(xs *xdrState) {\n", v.n)
+		fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(v.n))
 		fmt.Printf("%s", v.t.goXdr("v"))
 		fmt.Printf("}\n")
 	}
 }
 
 func emitEnum(ident string, val []enumItem) {
-	fmt.Printf("type %s int32\n", ident)
+	fmt.Printf("type %s int32\n", i(ident))
 
-	fmt.Printf("func (v *%s) xdr(xs *xdrState) {\n", ident)
+	fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(ident))
 	fmt.Printf("%s", typeInt{false}.goXdr("v"))
 	fmt.Printf("}\n")
 
 	for _, v := range val {
-		fmt.Printf("const %s = %s\n", v.name, v.val)
+		fmt.Printf("const %s = %s\n", i(v.name), v.val)
 	}
 }
 
 func emitStruct(ident string, val []decl) {
-	fmt.Printf("type %s struct {\n", ident)
+	fmt.Printf("type %s struct {\n", i(ident))
 	for _, v := range val {
 		switch v := v.(type) {
 		case declName:
-			fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+			fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
 	fmt.Printf("}\n")
 
-	fmt.Printf("func (v *%s) xdr(xs *xdrState) {\n", ident)
+	fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(ident))
 	fmt.Printf("%s", typeStruct{val}.goXdr("v"))
 	fmt.Printf("}\n")
 }
 
 func emitUnion(ident string, val typeUnion) {
-	fmt.Printf("type %s struct {\n", ident)
+	fmt.Printf("type %s struct {\n", i(ident))
 
 	switch v := val.switchDecl.(type) {
 	case declName:
-		fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+		fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
 	}
 
 	for _, c := range val.cases.cases {
 		switch v := c.body.(type) {
 		case declName:
-			fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+			fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
 
 	if val.cases.def != nil {
 		switch v := val.cases.def.(type) {
 		case declName:
-			fmt.Printf("  %s %s;\n", v.n, v.t.goType())
+			fmt.Printf("  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
 
 	fmt.Printf("}\n")
 
-	fmt.Printf("func (v *%s) xdr(xs *xdrState) {\n", ident)
+	fmt.Printf("func (v *%s) xdr(xs *XdrState) {\n", i(ident))
 	fmt.Printf("%s", val.goXdr("v"))
 	fmt.Printf("}\n")
 }
