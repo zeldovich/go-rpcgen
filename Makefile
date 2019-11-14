@@ -1,6 +1,6 @@
 GOPATH	:= $(shell go env GOPATH)
 
-all: rfc4506/prot.go
+all: rfc4506/prot.go rfc1057/prot.go
 
 $(GOPATH)/bin/go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
 	go generate

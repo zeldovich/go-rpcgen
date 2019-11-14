@@ -38,10 +38,13 @@ func main() {
 	var l lexer
 	l.s.Init(f, src, nil, 0)
 
-	outf, err := os.OpenFile(*outputFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	outTmp := *outputFile + ".tmp"
+	outf, err := os.OpenFile(outTmp, os.O_WRONLY|os.O_EXCL|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		panic(err)
 	}
+
+	defer os.Remove(outTmp)
 
 	out = outf
 	fmt.Fprintf(out, "package gonfs\n")
@@ -49,7 +52,7 @@ func main() {
 	xdrParse(&l)
 	outf.Close()
 
-	buf, err := ioutil.ReadFile(*outputFile)
+	buf, err := ioutil.ReadFile(outTmp)
 	if err != nil {
 		panic(err)
 	}
