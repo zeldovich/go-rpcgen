@@ -1,8 +1,10 @@
 GOPATH	:= $(shell go env GOPATH)
 
-all: gonfs/gen.go
+all: rfc4506/prot.go
 
-gonfs/gen.go: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
+$(GOPATH)/bin/go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
 	go generate
 	go install .
-	$(GOPATH)/bin/go-rpcgen -i rpc_nfs3_prot.x -o gonfs/gen.go
+
+%.go: %.x $(GOPATH)/bin/go-rpcgen
+	$(GOPATH)/bin/go-rpcgen -i $< -o $@
