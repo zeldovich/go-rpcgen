@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go/format"
 	"go/token"
 	"io"
 	"io/ioutil"
@@ -42,10 +43,24 @@ func main() {
 		panic(err)
 	}
 
-	defer outf.Close()
-
 	out = outf
 	fmt.Fprintf(out, "package gonfs\n")
 	fmt.Fprintf(out, "import . \"github.com/zeldovich/go-rpcgen/xdr\"\n")
 	xdrParse(&l)
+	outf.Close()
+
+	buf, err := ioutil.ReadFile(*outputFile)
+	if err != nil {
+		panic(err)
+	}
+
+	buf, err = format.Source(buf)
+	if err != nil {
+		panic(err)
+	}
+
+	err = ioutil.WriteFile(*outputFile, buf, 0666)
+	if err != nil {
+		panic(err)
+	}
 }
