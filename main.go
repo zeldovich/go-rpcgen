@@ -18,12 +18,12 @@ func main() {
 	flag.Parse()
 
 	if *inputFile == "" {
-		fmt.Fprintf(os.Stderr, "Must specify input file (-i)")
+		fmt.Fprintf(os.Stderr, "Must specify input file (-i)\n")
 		os.Exit(1)
 	}
 
 	if *outputFile == "" {
-		fmt.Fprintf(os.Stderr, "Must specify output file (-o)")
+		fmt.Fprintf(os.Stderr, "Must specify output file (-o)\n")
 		os.Exit(1)
 	}
 
