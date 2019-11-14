@@ -239,7 +239,7 @@ func (t typeStruct) goXdr(valPtr string) string {
 	for _, v := range t.items {
 		switch v := v.(type) {
 		case declName:
-			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, i(v.n)))
+			res += v.t.goXdr(fmt.Sprintf("&((%s).%s)", valPtr, i(v.n)))
 		}
 	}
 	return res
@@ -270,7 +270,7 @@ func (t typeUnion) goXdr(valPtr string) string {
 	case declVoid:
 		panic("void union switch")
 	case declName:
-		switchName = fmt.Sprintf("%s.%s", valPtr, i(v.n))
+		switchName = fmt.Sprintf("(%s).%s", valPtr, i(v.n))
 		res += v.t.goXdr(fmt.Sprintf("&(%s)", switchName))
 	}
 	res += fmt.Sprintf("switch %s {\n", switchName)
@@ -283,14 +283,14 @@ func (t typeUnion) goXdr(valPtr string) string {
 		}
 		switch v := c.body.(type) {
 		case declName:
-			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, i(v.n)))
+			res += v.t.goXdr(fmt.Sprintf("&((%s).%s)", valPtr, i(v.n)))
 		}
 	}
 	if t.cases.def != nil {
 		res += "default:\n"
 		switch v := t.cases.def.(type) {
 		case declName:
-			res += v.t.goXdr(fmt.Sprintf("&(%s.%s)", valPtr, i(v.n)))
+			res += v.t.goXdr(fmt.Sprintf("&((%s).%s)", valPtr, i(v.n)))
 		}
 	}
 	res += "}\n"

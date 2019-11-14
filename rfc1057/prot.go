@@ -19,8 +19,8 @@ type Opaque_auth struct {
 }
 
 func (v *Opaque_auth) Xdr(xs *XdrState) {
-	(*Auth_flavor)(&(v.Flavor)).Xdr(xs)
-	XdrVarArray(xs, 400, (*[]byte)(&(v.Body)))
+	(*Auth_flavor)(&((v).Flavor)).Xdr(xs)
+	XdrVarArray(xs, 400, (*[]byte)(&((v).Body)))
 }
 
 type Msg_type int32
@@ -84,13 +84,13 @@ type Rpc_msg struct {
 }
 
 func (v *Rpc_msg) Xdr(xs *XdrState) {
-	XdrU32(xs, (*uint32)(&(v.Xid)))
-	(*Msg_type)(&(&(v.Body).Mtype)).Xdr(xs)
-	switch &(v.Body).Mtype {
+	XdrU32(xs, (*uint32)(&((v).Xid)))
+	(*Msg_type)(&((&((v).Body)).Mtype)).Xdr(xs)
+	switch (&((v).Body)).Mtype {
 	case CALL:
-		(*Call_body)(&(&(v.Body).Cbody)).Xdr(xs)
+		(*Call_body)(&((&((v).Body)).Cbody)).Xdr(xs)
 	case REPLY:
-		(*Reply_body)(&(&(v.Body).Rbody)).Xdr(xs)
+		(*Reply_body)(&((&((v).Body)).Rbody)).Xdr(xs)
 	}
 }
 
@@ -104,12 +104,12 @@ type Call_body struct {
 }
 
 func (v *Call_body) Xdr(xs *XdrState) {
-	XdrU32(xs, (*uint32)(&(v.Rpcvers)))
-	XdrU32(xs, (*uint32)(&(v.Prog)))
-	XdrU32(xs, (*uint32)(&(v.Vers)))
-	XdrU32(xs, (*uint32)(&(v.Proc)))
-	(*Opaque_auth)(&(v.Cred)).Xdr(xs)
-	(*Opaque_auth)(&(v.Verf)).Xdr(xs)
+	XdrU32(xs, (*uint32)(&((v).Rpcvers)))
+	XdrU32(xs, (*uint32)(&((v).Prog)))
+	XdrU32(xs, (*uint32)(&((v).Vers)))
+	XdrU32(xs, (*uint32)(&((v).Proc)))
+	(*Opaque_auth)(&((v).Cred)).Xdr(xs)
+	(*Opaque_auth)(&((v).Verf)).Xdr(xs)
 }
 
 type Reply_body struct {
@@ -119,12 +119,12 @@ type Reply_body struct {
 }
 
 func (v *Reply_body) Xdr(xs *XdrState) {
-	(*Reply_stat)(&(v.Stat)).Xdr(xs)
-	switch v.Stat {
+	(*Reply_stat)(&((v).Stat)).Xdr(xs)
+	switch (v).Stat {
 	case MSG_ACCEPTED:
-		(*Accepted_reply)(&(v.Areply)).Xdr(xs)
+		(*Accepted_reply)(&((v).Areply)).Xdr(xs)
 	case MSG_DENIED:
-		(*Rejected_reply)(&(v.Rreply)).Xdr(xs)
+		(*Rejected_reply)(&((v).Rreply)).Xdr(xs)
 	}
 }
 
@@ -141,14 +141,14 @@ type Accepted_reply struct {
 }
 
 func (v *Accepted_reply) Xdr(xs *XdrState) {
-	(*Opaque_auth)(&(v.Verf)).Xdr(xs)
-	(*Accept_stat)(&(&(v.Reply_data).Stat)).Xdr(xs)
-	switch &(v.Reply_data).Stat {
+	(*Opaque_auth)(&((v).Verf)).Xdr(xs)
+	(*Accept_stat)(&((&((v).Reply_data)).Stat)).Xdr(xs)
+	switch (&((v).Reply_data)).Stat {
 	case SUCCESS:
-		XdrArray(xs, 0, (*&(&(v.Reply_data).Results))[:])
+		XdrArray(xs, 0, (*&((&((v).Reply_data)).Results))[:])
 	case PROG_MISMATCH:
-		XdrU32(xs, (*uint32)(&(&(&(v.Reply_data).Mismatch_info).Low)))
-		XdrU32(xs, (*uint32)(&(&(&(v.Reply_data).Mismatch_info).High)))
+		XdrU32(xs, (*uint32)(&((&((&((v).Reply_data)).Mismatch_info)).Low)))
+		XdrU32(xs, (*uint32)(&((&((&((v).Reply_data)).Mismatch_info)).High)))
 	default:
 	}
 }
@@ -163,13 +163,13 @@ type Rejected_reply struct {
 }
 
 func (v *Rejected_reply) Xdr(xs *XdrState) {
-	(*Reject_stat)(&(v.Stat)).Xdr(xs)
-	switch v.Stat {
+	(*Reject_stat)(&((v).Stat)).Xdr(xs)
+	switch (v).Stat {
 	case RPC_MISMATCH:
-		XdrU32(xs, (*uint32)(&(&(v.Mismatch_info).Low)))
-		XdrU32(xs, (*uint32)(&(&(v.Mismatch_info).High)))
+		XdrU32(xs, (*uint32)(&((&((v).Mismatch_info)).Low)))
+		XdrU32(xs, (*uint32)(&((&((v).Mismatch_info)).High)))
 	case AUTH_ERROR:
-		(*Auth_stat)(&(v.Astat)).Xdr(xs)
+		(*Auth_stat)(&((v).Astat)).Xdr(xs)
 	}
 }
 
@@ -182,23 +182,23 @@ type Auth_unix struct {
 }
 
 func (v *Auth_unix) Xdr(xs *XdrState) {
-	XdrU32(xs, (*uint32)(&(v.Stamp)))
-	XdrString(xs, 255, (*string)(&(v.Machinename)))
-	XdrU32(xs, (*uint32)(&(v.Uid)))
-	XdrU32(xs, (*uint32)(&(v.Gid)))
+	XdrU32(xs, (*uint32)(&((v).Stamp)))
+	XdrString(xs, 255, (*string)(&((v).Machinename)))
+	XdrU32(xs, (*uint32)(&((v).Uid)))
+	XdrU32(xs, (*uint32)(&((v).Gid)))
 	{
 		var __arraysz uint32
-		xs.EncodingSetSize(&__arraysz, len(*&(v.Gids)))
+		xs.EncodingSetSize(&__arraysz, len(*&((v).Gids)))
 		XdrU32(xs, (*uint32)(&__arraysz))
 
 		if __arraysz > 16 {
 			xs.SetError("array too large")
 		} else {
 			if xs.Decoding() {
-				*&(v.Gids) = make([]uint32, __arraysz)
+				*&((v).Gids) = make([]uint32, __arraysz)
 			}
 			for i := uint64(0); i < uint64(__arraysz); i++ {
-				XdrU32(xs, (*uint32)(&((*(&(v.Gids)))[i])))
+				XdrU32(xs, (*uint32)(&((*(&((v).Gids)))[i])))
 
 			}
 		}
