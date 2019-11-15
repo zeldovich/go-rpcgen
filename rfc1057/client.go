@@ -11,12 +11,16 @@ import (
 type Client struct {
 	rw  io.ReadWriter
 	xid uint32
+	prog uint32
+	vers uint32
 }
 
-func MakeClient(rw io.ReadWriter) *Client {
+func MakeClient(rw io.ReadWriter, prog, vers uint32) *Client {
 	return &Client{
 		rw:  rw,
 		xid: 0,
+		prog: prog,
+		vers: vers,
 	}
 }
 
@@ -39,15 +43,15 @@ func (rw *rwBuffer) Read(buf []byte) (n int, err error) {
 	return
 }
 
-func (c *Client) Call(prog, vers, proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, resp xdr.Xdrable) error {
+func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, resp xdr.Xdrable) error {
 	c.xid++
 
 	var req Rpc_msg
 	req.Xid = c.xid
 	req.Body.Mtype = CALL
 	req.Body.Cbody.Rpcvers = 2
-	req.Body.Cbody.Prog = prog
-	req.Body.Cbody.Vers = vers
+	req.Body.Cbody.Prog = c.prog
+	req.Body.Cbody.Vers = c.vers
 	req.Body.Cbody.Proc = proc
 	req.Body.Cbody.Cred = cred
 	req.Body.Cbody.Verf = verf
