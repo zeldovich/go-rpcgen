@@ -20,7 +20,9 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 		return eof
 	}
 
-	// fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
+	if *debugFlag {
+		fmt.Printf("pos=%v, tok=%v, lit=%v\n", pos, tok, lit)
+	}
 
 	switch tok {
 	case token.CONST:
@@ -41,6 +43,10 @@ func (l *lexer) Lex(lval *xdrSymType) int {
 
 	case token.DEFAULT:
 		return KWDEFAULT
+
+	case token.MAP:
+		lval.str = "map"
+		return IDENT
 
 	case token.IDENT:
 		switch lit {

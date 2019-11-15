@@ -13,6 +13,7 @@ import (
 var inputFile = flag.String("i", "", "Input file (.x)")
 var outputFile = flag.String("o", "", "Output file (.go)")
 var outputPackage = flag.String("p", "main", "Output package name")
+var debugFlag = flag.Bool("d", false, "Debug parsing")
 var out io.Writer
 
 func main() {

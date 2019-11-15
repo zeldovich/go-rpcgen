@@ -19,6 +19,7 @@ package main
   progCalls []progCall;
   progVer progVer;
   progVers []progVer;
+  typespecOpt typespecOpt;
 }
 
 %token KWCONST
@@ -67,11 +68,11 @@ package main
 %type <unionCaseDecls> unioncases
 %type <unionCaseDecl> unioncase
 %type <strs> caselist
-%type <str> progtype
 %type <progCall> progcall
 %type <progCalls> progcalls
 %type <progVers> progvers
 %type <progVer> progver
+%type <typespecOpt> typespecopt
 
 %%
 
@@ -198,13 +199,13 @@ progver: KWVERSION IDENT '{' progcalls '}' '=' CONST ';'
 progcalls: { $$ = nil } | progcalls progcall
   { $$ = append($1, $2) }
 
-progcall: progtype IDENT '(' progtype ')' '=' CONST ';'
+progcall: typespecopt IDENT '(' typespecopt ')' '=' CONST ';'
   { $$ = progCall{$2, $4, $1, $7} }
 
-progtype: KWVOID
-  { $$ = "" }
-| IDENT
-  { $$ = $1 }
+typespecopt: KWVOID
+  { $$ = typespecOpt{ isVoid: true } }
+| typespec
+  { $$ = typespecOpt{ isVoid: false, t: $1 } }
 
 %%
 

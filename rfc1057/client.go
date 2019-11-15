@@ -79,11 +79,11 @@ func (c *Client) Call(prog, vers, proc uint32, cred, verf Opaque_auth, args xdr.
 	}
 
 	hlen := binary.BigEndian.Uint32(hdr[:])
-	if hlen & (1 << 31) == 0 {
+	if hlen&(1<<31) == 0 {
 		return fmt.Errorf("fragments not supported")
 	}
 
-	buf := make([]byte, hlen & 0x7fffffff)
+	buf := make([]byte, hlen&0x7fffffff)
 	_, err = io.ReadFull(c.rw, buf)
 	if err != nil {
 		return err

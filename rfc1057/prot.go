@@ -204,3 +204,85 @@ func (v *Auth_unix) Xdr(xs *XdrState) {
 		}
 	}
 }
+
+const PMAP_PORT = 111
+
+type Mapping struct {
+	Prog uint32
+	Vers uint32
+	Prot uint32
+	Port uint32
+}
+
+func (v *Mapping) Xdr(xs *XdrState) {
+	XdrU32(xs, (*uint32)(&((v).Prog)))
+	XdrU32(xs, (*uint32)(&((v).Vers)))
+	XdrU32(xs, (*uint32)(&((v).Prot)))
+	XdrU32(xs, (*uint32)(&((v).Port)))
+}
+
+const IPPROTO_TCP = 6
+const IPPROTO_UDP = 17
+
+type Pmaplist struct{ P *Pmaplistelem }
+
+func (v *Pmaplist) Xdr(xs *XdrState) {
+	if xs.Encoding() {
+		opted := (v).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Pmaplistelem)((v).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(v).P = new(Pmaplistelem)
+			(*Pmaplistelem)((v).P).Xdr(xs)
+		}
+	}
+}
+
+type Pmaplistelem struct {
+	Map  Mapping
+	Next Pmaplist
+}
+
+func (v *Pmaplistelem) Xdr(xs *XdrState) {
+	(*Mapping)(&((v).Map)).Xdr(xs)
+	(*Pmaplist)(&((v).Next)).Xdr(xs)
+}
+
+type Call_args struct {
+	Prog uint32
+	Vers uint32
+	Proc uint32
+	Args []byte
+}
+
+func (v *Call_args) Xdr(xs *XdrState) {
+	XdrU32(xs, (*uint32)(&((v).Prog)))
+	XdrU32(xs, (*uint32)(&((v).Vers)))
+	XdrU32(xs, (*uint32)(&((v).Proc)))
+	XdrVarArray(xs, -1, (*[]byte)(&((v).Args)))
+}
+
+type Call_result struct {
+	Port uint32
+	Res  []byte
+}
+
+func (v *Call_result) Xdr(xs *XdrState) {
+	XdrU32(xs, (*uint32)(&((v).Port)))
+	XdrVarArray(xs, -1, (*[]byte)(&((v).Res)))
+}
+
+const PMAP_PROG = 100000
+const PMAP_VERS = 2
+const PMAPPROC_NULL = 0
+const PMAPPROC_SET = 1
+const PMAPPROC_UNSET = 2
+const PMAPPROC_GETPORT = 3
+const PMAPPROC_DUMP = 4
+const PMAPPROC_CALLIT = 5

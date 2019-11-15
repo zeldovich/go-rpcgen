@@ -160,6 +160,11 @@ type typespec interface {
 	goXdr(valPtr string) string
 }
 
+type typespecOpt struct {
+	isVoid bool
+	t      typespec
+}
+
 type typeInt struct {
 	unsig bool
 }
@@ -340,8 +345,8 @@ type unionCaseDecl struct {
 
 type progCall struct {
 	name string
-	arg  string
-	res  string
+	arg  typespecOpt
+	res  typespecOpt
 	id   string
 }
 
