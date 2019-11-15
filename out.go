@@ -6,7 +6,14 @@ import (
 )
 
 func i(ident string) string {
-	return strings.ToUpper(ident[:1]) + ident[1:]
+	switch ident {
+	case "TRUE":
+		return "true"
+	case "FALSE":
+		return "false"
+	default:
+		return strings.ToUpper(ident[:1]) + ident[1:]
+	}
 }
 
 type decl interface{}
@@ -91,7 +98,7 @@ func (t declTypeOpaqueArray) goType() string {
 }
 
 func (t declTypeOpaqueArray) goXdr(valPtr string) string {
-	return fmt.Sprintf("XdrArray(xs, (*%s)[:]);\n", valPtr)
+	return fmt.Sprintf("xdr.XdrArray(xs, (*%s)[:]);\n", valPtr)
 }
 
 type declTypeOpaqueVarArray struct {
@@ -107,7 +114,7 @@ func (t declTypeOpaqueVarArray) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("XdrVarArray(xs, %s, (*[]byte)(%s));\n", sz, valPtr)
+	return fmt.Sprintf("xdr.XdrVarArray(xs, %s, (*[]byte)(%s));\n", sz, valPtr)
 }
 
 type declTypeString struct {
@@ -123,7 +130,7 @@ func (t declTypeString) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("XdrString(xs, %s, (*string)(%s));\n", sz, valPtr)
+	return fmt.Sprintf("xdr.XdrString(xs, %s, (*string)(%s));\n", sz, valPtr)
 }
 
 type declTypePtr struct {
@@ -179,9 +186,9 @@ func (t typeInt) goType() string {
 
 func (t typeInt) goXdr(valPtr string) string {
 	if t.unsig {
-		return fmt.Sprintf("XdrU32(xs, (*uint32)(%s));\n", valPtr)
+		return fmt.Sprintf("xdr.XdrU32(xs, (*uint32)(%s));\n", valPtr)
 	} else {
-		return fmt.Sprintf("XdrS32(xs, (*int32)(%s));\n", valPtr)
+		return fmt.Sprintf("xdr.XdrS32(xs, (*int32)(%s));\n", valPtr)
 	}
 }
 
@@ -199,9 +206,9 @@ func (t typeHyper) goType() string {
 
 func (t typeHyper) goXdr(valPtr string) string {
 	if t.unsig {
-		return fmt.Sprintf("XdrU64(xs, (*uint64)(%s));\n", valPtr)
+		return fmt.Sprintf("xdr.XdrU64(xs, (*uint64)(%s));\n", valPtr)
 	} else {
-		return fmt.Sprintf("XdrS64(xs, (*int64)(%s));\n", valPtr)
+		return fmt.Sprintf("xdr.XdrS64(xs, (*int64)(%s));\n", valPtr)
 	}
 }
 
@@ -224,7 +231,7 @@ type typeBool struct{}
 
 func (t typeBool) goType() string { return "bool" }
 func (t typeBool) goXdr(valPtr string) string {
-	return fmt.Sprintf("XdrBool(xs, %s);\n", valPtr)
+	return fmt.Sprintf("xdr.XdrBool(xs, %s);\n", valPtr)
 }
 
 type typeEnum struct {
@@ -297,9 +304,9 @@ func (t typeUnion) goXdr(valPtr string) string {
 	}
 	res += fmt.Sprintf("switch %s {\n", switchName)
 	for _, c := range t.cases.cases {
-		for i, cval := range c.cases {
-			res += fmt.Sprintf("case %s:\n", cval)
-			if i != len(c.cases)-1 {
+		for idx, cval := range c.cases {
+			res += fmt.Sprintf("case %s:\n", i(cval))
+			if idx != len(c.cases)-1 {
 				res += "fallthrough\n"
 			}
 		}
@@ -382,7 +389,7 @@ func emitTypedef(val decl) {
 	case declName:
 		fmt.Fprintf(out, "type %s %s\n", i(v.n), v.t.goType())
 
-		fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(v.n))
+		fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(v.n))
 		fmt.Fprintf(out, "%s", v.t.goXdr("v"))
 		fmt.Fprintf(out, "}\n")
 	}
@@ -391,7 +398,7 @@ func emitTypedef(val decl) {
 func emitEnum(ident string, val []enumItem) {
 	fmt.Fprintf(out, "type %s int32\n", i(ident))
 
-	fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(ident))
+	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", typeInt{false}.goXdr("v"))
 	fmt.Fprintf(out, "}\n")
 
@@ -410,7 +417,7 @@ func emitStruct(ident string, val []decl) {
 	}
 	fmt.Fprintf(out, "}\n")
 
-	fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(ident))
+	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", typeStruct{val}.goXdr("v"))
 	fmt.Fprintf(out, "}\n")
 }
@@ -439,7 +446,7 @@ func emitUnion(ident string, val typeUnion) {
 
 	fmt.Fprintf(out, "}\n")
 
-	fmt.Fprintf(out, "func (v *%s) Xdr(xs *XdrState) {\n", i(ident))
+	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", val.goXdr("v"))
 	fmt.Fprintf(out, "}\n")
 }

@@ -50,7 +50,7 @@ func main() {
 
 	out = outf
 	fmt.Fprintf(out, "package %s\n", *outputPackage)
-	fmt.Fprintf(out, "import . \"github.com/zeldovich/go-rpcgen/xdr\"\n")
+	fmt.Fprintf(out, "import \"github.com/zeldovich/go-rpcgen/xdr\"\n")
 	xdrParse(&l)
 	outf.Close()
 

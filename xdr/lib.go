@@ -7,13 +7,6 @@ import (
 	"math"
 )
 
-const TRUE = true
-const FALSE = false
-
-type Xdrable interface {
-	Xdr(xs *XdrState)
-}
-
 type XdrState struct {
 	// err != nil means error state
 	err error
@@ -256,7 +249,3 @@ func XdrString(xs *XdrState, maxlen int, v *string) {
 		xdrRW(xs, make([]byte, (4-len(*v)%4)%4))
 	}
 }
-
-type Void struct{}
-
-func (_ *Void) Xdr(xs *XdrState) {}

@@ -1,6 +1,6 @@
 package rfc4506
 
-import . "github.com/zeldovich/go-rpcgen/xdr"
+import "github.com/zeldovich/go-rpcgen/xdr"
 
 const PROGRAM = 100003
 const VERSION = 3
@@ -11,110 +11,110 @@ const NFS3_WRITEVERFSIZE = 8
 
 type Uint64 uint64
 
-func (v *Uint64) Xdr(xs *XdrState) {
-	XdrU64(xs, (*uint64)(v))
+func (v *Uint64) Xdr(xs *xdr.XdrState) {
+	xdr.XdrU64(xs, (*uint64)(v))
 }
 
 type Int64 int64
 
-func (v *Int64) Xdr(xs *XdrState) {
-	XdrS64(xs, (*int64)(v))
+func (v *Int64) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS64(xs, (*int64)(v))
 }
 
 type Uint32 uint32
 
-func (v *Uint32) Xdr(xs *XdrState) {
-	XdrU32(xs, (*uint32)(v))
+func (v *Uint32) Xdr(xs *xdr.XdrState) {
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 
 type Int32 int32
 
-func (v *Int32) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Int32) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 type Filename3 string
 
-func (v *Filename3) Xdr(xs *XdrState) {
-	XdrString(xs, -1, (*string)(v))
+func (v *Filename3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrString(xs, -1, (*string)(v))
 }
 
 type Nfspath3 string
 
-func (v *Nfspath3) Xdr(xs *XdrState) {
-	XdrString(xs, -1, (*string)(v))
+func (v *Nfspath3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrString(xs, -1, (*string)(v))
 }
 
 type Fileid3 Uint64
 
-func (v *Fileid3) Xdr(xs *XdrState) {
+func (v *Fileid3) Xdr(xs *xdr.XdrState) {
 	(*Uint64)(v).Xdr(xs)
 }
 
 type Cookie3 Uint64
 
-func (v *Cookie3) Xdr(xs *XdrState) {
+func (v *Cookie3) Xdr(xs *xdr.XdrState) {
 	(*Uint64)(v).Xdr(xs)
 }
 
 type Cookieverf3 [NFS3_COOKIEVERFSIZE]byte
 
-func (v *Cookieverf3) Xdr(xs *XdrState) {
-	XdrArray(xs, (*v)[:])
+func (v *Cookieverf3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrArray(xs, (*v)[:])
 }
 
 type Createverf3 [NFS3_CREATEVERFSIZE]byte
 
-func (v *Createverf3) Xdr(xs *XdrState) {
-	XdrArray(xs, (*v)[:])
+func (v *Createverf3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrArray(xs, (*v)[:])
 }
 
 type Writeverf3 [NFS3_WRITEVERFSIZE]byte
 
-func (v *Writeverf3) Xdr(xs *XdrState) {
-	XdrArray(xs, (*v)[:])
+func (v *Writeverf3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrArray(xs, (*v)[:])
 }
 
 type Uid3 Uint32
 
-func (v *Uid3) Xdr(xs *XdrState) {
+func (v *Uid3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(v).Xdr(xs)
 }
 
 type Gid3 Uint32
 
-func (v *Gid3) Xdr(xs *XdrState) {
+func (v *Gid3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(v).Xdr(xs)
 }
 
 type Size3 Uint64
 
-func (v *Size3) Xdr(xs *XdrState) {
+func (v *Size3) Xdr(xs *xdr.XdrState) {
 	(*Uint64)(v).Xdr(xs)
 }
 
 type Offset3 Uint64
 
-func (v *Offset3) Xdr(xs *XdrState) {
+func (v *Offset3) Xdr(xs *xdr.XdrState) {
 	(*Uint64)(v).Xdr(xs)
 }
 
 type Mode3 Uint32
 
-func (v *Mode3) Xdr(xs *XdrState) {
+func (v *Mode3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(v).Xdr(xs)
 }
 
 type Count3 Uint32
 
-func (v *Count3) Xdr(xs *XdrState) {
+func (v *Count3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(v).Xdr(xs)
 }
 
 type Nfsstat3 int32
 
-func (v *Nfsstat3) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Nfsstat3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 const NFS3_OK = 0
@@ -149,8 +149,8 @@ const NFS3ERR_JUKEBOX = 10008
 
 type Ftype3 int32
 
-func (v *Ftype3) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Ftype3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 const NF3REG = 1
@@ -166,7 +166,7 @@ type Specdata3 struct {
 	Specdata2 Uint32
 }
 
-func (v *Specdata3) Xdr(xs *XdrState) {
+func (v *Specdata3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(&((v).Specdata1)).Xdr(xs)
 	(*Uint32)(&((v).Specdata2)).Xdr(xs)
 }
@@ -175,8 +175,8 @@ type Nfs_fh3 struct {
 	Data []byte
 }
 
-func (v *Nfs_fh3) Xdr(xs *XdrState) {
-	XdrVarArray(xs, NFS3_FHSIZE, (*[]byte)(&((v).Data)))
+func (v *Nfs_fh3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrVarArray(xs, NFS3_FHSIZE, (*[]byte)(&((v).Data)))
 }
 
 type Nfstime3 struct {
@@ -184,7 +184,7 @@ type Nfstime3 struct {
 	Nseconds Uint32
 }
 
-func (v *Nfstime3) Xdr(xs *XdrState) {
+func (v *Nfstime3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(&((v).Seconds)).Xdr(xs)
 	(*Uint32)(&((v).Nseconds)).Xdr(xs)
 }
@@ -205,7 +205,7 @@ type Fattr3 struct {
 	Ctime  Nfstime3
 }
 
-func (v *Fattr3) Xdr(xs *XdrState) {
+func (v *Fattr3) Xdr(xs *xdr.XdrState) {
 	(*Ftype3)(&((v).Ftype)).Xdr(xs)
 	(*Mode3)(&((v).Mode)).Xdr(xs)
 	(*Uint32)(&((v).Nlink)).Xdr(xs)
@@ -226,12 +226,12 @@ type Post_op_attr struct {
 	Attributes        Fattr3
 }
 
-func (v *Post_op_attr) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Attributes_follow))
+func (v *Post_op_attr) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Attributes_follow))
 	switch (v).Attributes_follow {
-	case TRUE:
+	case true:
 		(*Fattr3)(&((v).Attributes)).Xdr(xs)
-	case FALSE:
+	case false:
 	}
 }
 
@@ -241,7 +241,7 @@ type Wcc_attr struct {
 	Ctime Nfstime3
 }
 
-func (v *Wcc_attr) Xdr(xs *XdrState) {
+func (v *Wcc_attr) Xdr(xs *xdr.XdrState) {
 	(*Size3)(&((v).Size)).Xdr(xs)
 	(*Nfstime3)(&((v).Mtime)).Xdr(xs)
 	(*Nfstime3)(&((v).Ctime)).Xdr(xs)
@@ -252,12 +252,12 @@ type Pre_op_attr struct {
 	Attributes        Wcc_attr
 }
 
-func (v *Pre_op_attr) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Attributes_follow))
+func (v *Pre_op_attr) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Attributes_follow))
 	switch (v).Attributes_follow {
-	case TRUE:
+	case true:
 		(*Wcc_attr)(&((v).Attributes)).Xdr(xs)
-	case FALSE:
+	case false:
 	}
 }
 
@@ -266,7 +266,7 @@ type Wcc_data struct {
 	After  Post_op_attr
 }
 
-func (v *Wcc_data) Xdr(xs *XdrState) {
+func (v *Wcc_data) Xdr(xs *xdr.XdrState) {
 	(*Pre_op_attr)(&((v).Before)).Xdr(xs)
 	(*Post_op_attr)(&((v).After)).Xdr(xs)
 }
@@ -276,19 +276,19 @@ type Post_op_fh3 struct {
 	Handle         Nfs_fh3
 }
 
-func (v *Post_op_fh3) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Handle_follows))
+func (v *Post_op_fh3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Handle_follows))
 	switch (v).Handle_follows {
-	case TRUE:
+	case true:
 		(*Nfs_fh3)(&((v).Handle)).Xdr(xs)
-	case FALSE:
+	case false:
 	}
 }
 
 type Time_how int32
 
-func (v *Time_how) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Time_how) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 const DONT_CHANGE = 0
@@ -300,10 +300,10 @@ type Set_mode3 struct {
 	Mode   Mode3
 }
 
-func (v *Set_mode3) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Set_it))
+func (v *Set_mode3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Set_it))
 	switch (v).Set_it {
-	case TRUE:
+	case true:
 		(*Mode3)(&((v).Mode)).Xdr(xs)
 	default:
 	}
@@ -314,10 +314,10 @@ type Set_uid3 struct {
 	Uid    Uid3
 }
 
-func (v *Set_uid3) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Set_it))
+func (v *Set_uid3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Set_it))
 	switch (v).Set_it {
-	case TRUE:
+	case true:
 		(*Uid3)(&((v).Uid)).Xdr(xs)
 	default:
 	}
@@ -328,10 +328,10 @@ type Set_gid3 struct {
 	Gid    Gid3
 }
 
-func (v *Set_gid3) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Set_it))
+func (v *Set_gid3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Set_it))
 	switch (v).Set_it {
-	case TRUE:
+	case true:
 		(*Gid3)(&((v).Gid)).Xdr(xs)
 	default:
 	}
@@ -342,10 +342,10 @@ type Set_size3 struct {
 	Size   Size3
 }
 
-func (v *Set_size3) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Set_it))
+func (v *Set_size3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Set_it))
 	switch (v).Set_it {
-	case TRUE:
+	case true:
 		(*Size3)(&((v).Size)).Xdr(xs)
 	default:
 	}
@@ -356,7 +356,7 @@ type Set_atime struct {
 	Atime  Nfstime3
 }
 
-func (v *Set_atime) Xdr(xs *XdrState) {
+func (v *Set_atime) Xdr(xs *xdr.XdrState) {
 	(*Time_how)(&((v).Set_it)).Xdr(xs)
 	switch (v).Set_it {
 	case SET_TO_CLIENT_TIME:
@@ -370,7 +370,7 @@ type Set_mtime struct {
 	Mtime  Nfstime3
 }
 
-func (v *Set_mtime) Xdr(xs *XdrState) {
+func (v *Set_mtime) Xdr(xs *xdr.XdrState) {
 	(*Time_how)(&((v).Set_it)).Xdr(xs)
 	switch (v).Set_it {
 	case SET_TO_CLIENT_TIME:
@@ -388,7 +388,7 @@ type Sattr3 struct {
 	Mtime Set_mtime
 }
 
-func (v *Sattr3) Xdr(xs *XdrState) {
+func (v *Sattr3) Xdr(xs *xdr.XdrState) {
 	(*Set_mode3)(&((v).Mode)).Xdr(xs)
 	(*Set_uid3)(&((v).Uid)).Xdr(xs)
 	(*Set_gid3)(&((v).Gid)).Xdr(xs)
@@ -402,7 +402,7 @@ type Diropargs3 struct {
 	Name Filename3
 }
 
-func (v *Diropargs3) Xdr(xs *XdrState) {
+func (v *Diropargs3) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Dir)).Xdr(xs)
 	(*Filename3)(&((v).Name)).Xdr(xs)
 }
@@ -436,7 +436,7 @@ type GETATTR3args struct {
 	Object Nfs_fh3
 }
 
-func (v *GETATTR3args) Xdr(xs *XdrState) {
+func (v *GETATTR3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Object)).Xdr(xs)
 }
 
@@ -444,7 +444,7 @@ type GETATTR3resok struct {
 	Obj_attributes Fattr3
 }
 
-func (v *GETATTR3resok) Xdr(xs *XdrState) {
+func (v *GETATTR3resok) Xdr(xs *xdr.XdrState) {
 	(*Fattr3)(&((v).Obj_attributes)).Xdr(xs)
 }
 
@@ -453,7 +453,7 @@ type GETATTR3res struct {
 	Resok  GETATTR3resok
 }
 
-func (v *GETATTR3res) Xdr(xs *XdrState) {
+func (v *GETATTR3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -467,12 +467,12 @@ type Sattrguard3 struct {
 	Obj_ctime Nfstime3
 }
 
-func (v *Sattrguard3) Xdr(xs *XdrState) {
-	XdrBool(xs, &((v).Check))
+func (v *Sattrguard3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, &((v).Check))
 	switch (v).Check {
-	case TRUE:
+	case true:
 		(*Nfstime3)(&((v).Obj_ctime)).Xdr(xs)
-	case FALSE:
+	case false:
 	}
 }
 
@@ -482,7 +482,7 @@ type SETATTR3args struct {
 	Guard          Sattrguard3
 }
 
-func (v *SETATTR3args) Xdr(xs *XdrState) {
+func (v *SETATTR3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Object)).Xdr(xs)
 	(*Sattr3)(&((v).New_attributes)).Xdr(xs)
 	(*Sattrguard3)(&((v).Guard)).Xdr(xs)
@@ -492,7 +492,7 @@ type SETATTR3resok struct {
 	Obj_wcc Wcc_data
 }
 
-func (v *SETATTR3resok) Xdr(xs *XdrState) {
+func (v *SETATTR3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Obj_wcc)).Xdr(xs)
 }
 
@@ -500,7 +500,7 @@ type SETATTR3resfail struct {
 	Obj_wcc Wcc_data
 }
 
-func (v *SETATTR3resfail) Xdr(xs *XdrState) {
+func (v *SETATTR3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Obj_wcc)).Xdr(xs)
 }
 
@@ -510,7 +510,7 @@ type SETATTR3res struct {
 	Resfail SETATTR3resfail
 }
 
-func (v *SETATTR3res) Xdr(xs *XdrState) {
+func (v *SETATTR3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -524,7 +524,7 @@ type LOOKUP3args struct {
 	What Diropargs3
 }
 
-func (v *LOOKUP3args) Xdr(xs *XdrState) {
+func (v *LOOKUP3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).What)).Xdr(xs)
 }
 
@@ -534,7 +534,7 @@ type LOOKUP3resok struct {
 	Dir_attributes Post_op_attr
 }
 
-func (v *LOOKUP3resok) Xdr(xs *XdrState) {
+func (v *LOOKUP3resok) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Object)).Xdr(xs)
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Post_op_attr)(&((v).Dir_attributes)).Xdr(xs)
@@ -544,7 +544,7 @@ type LOOKUP3resfail struct {
 	Dir_attributes Post_op_attr
 }
 
-func (v *LOOKUP3resfail) Xdr(xs *XdrState) {
+func (v *LOOKUP3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Dir_attributes)).Xdr(xs)
 }
 
@@ -554,7 +554,7 @@ type LOOKUP3res struct {
 	Resfail LOOKUP3resfail
 }
 
-func (v *LOOKUP3res) Xdr(xs *XdrState) {
+func (v *LOOKUP3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -576,7 +576,7 @@ type ACCESS3args struct {
 	Access Uint32
 }
 
-func (v *ACCESS3args) Xdr(xs *XdrState) {
+func (v *ACCESS3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Object)).Xdr(xs)
 	(*Uint32)(&((v).Access)).Xdr(xs)
 }
@@ -586,7 +586,7 @@ type ACCESS3resok struct {
 	Access         Uint32
 }
 
-func (v *ACCESS3resok) Xdr(xs *XdrState) {
+func (v *ACCESS3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Uint32)(&((v).Access)).Xdr(xs)
 }
@@ -595,7 +595,7 @@ type ACCESS3resfail struct {
 	Obj_attributes Post_op_attr
 }
 
-func (v *ACCESS3resfail) Xdr(xs *XdrState) {
+func (v *ACCESS3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 }
 
@@ -605,7 +605,7 @@ type ACCESS3res struct {
 	Resfail ACCESS3resfail
 }
 
-func (v *ACCESS3res) Xdr(xs *XdrState) {
+func (v *ACCESS3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -619,7 +619,7 @@ type READLINK3args struct {
 	Symlink Nfs_fh3
 }
 
-func (v *READLINK3args) Xdr(xs *XdrState) {
+func (v *READLINK3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Symlink)).Xdr(xs)
 }
 
@@ -628,7 +628,7 @@ type READLINK3resok struct {
 	Data               Nfspath3
 }
 
-func (v *READLINK3resok) Xdr(xs *XdrState) {
+func (v *READLINK3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Symlink_attributes)).Xdr(xs)
 	(*Nfspath3)(&((v).Data)).Xdr(xs)
 }
@@ -637,7 +637,7 @@ type READLINK3resfail struct {
 	Symlink_attributes Post_op_attr
 }
 
-func (v *READLINK3resfail) Xdr(xs *XdrState) {
+func (v *READLINK3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Symlink_attributes)).Xdr(xs)
 }
 
@@ -647,7 +647,7 @@ type READLINK3res struct {
 	Resfail READLINK3resfail
 }
 
-func (v *READLINK3res) Xdr(xs *XdrState) {
+func (v *READLINK3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -663,7 +663,7 @@ type READ3args struct {
 	Count  Count3
 }
 
-func (v *READ3args) Xdr(xs *XdrState) {
+func (v *READ3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).File)).Xdr(xs)
 	(*Offset3)(&((v).Offset)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
@@ -676,18 +676,18 @@ type READ3resok struct {
 	Data            []byte
 }
 
-func (v *READ3resok) Xdr(xs *XdrState) {
+func (v *READ3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).File_attributes)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
-	XdrBool(xs, &((v).Eof))
-	XdrVarArray(xs, -1, (*[]byte)(&((v).Data)))
+	xdr.XdrBool(xs, &((v).Eof))
+	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Data)))
 }
 
 type READ3resfail struct {
 	File_attributes Post_op_attr
 }
 
-func (v *READ3resfail) Xdr(xs *XdrState) {
+func (v *READ3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).File_attributes)).Xdr(xs)
 }
 
@@ -697,7 +697,7 @@ type READ3res struct {
 	Resfail READ3resfail
 }
 
-func (v *READ3res) Xdr(xs *XdrState) {
+func (v *READ3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -709,8 +709,8 @@ func (v *READ3res) Xdr(xs *XdrState) {
 
 type Stable_how int32
 
-func (v *Stable_how) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Stable_how) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 const UNSTABLE = 0
@@ -725,12 +725,12 @@ type WRITE3args struct {
 	Data   []byte
 }
 
-func (v *WRITE3args) Xdr(xs *XdrState) {
+func (v *WRITE3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).File)).Xdr(xs)
 	(*Offset3)(&((v).Offset)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
 	(*Stable_how)(&((v).Stable)).Xdr(xs)
-	XdrVarArray(xs, -1, (*[]byte)(&((v).Data)))
+	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Data)))
 }
 
 type WRITE3resok struct {
@@ -740,7 +740,7 @@ type WRITE3resok struct {
 	Verf      Writeverf3
 }
 
-func (v *WRITE3resok) Xdr(xs *XdrState) {
+func (v *WRITE3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).File_wcc)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
 	(*Stable_how)(&((v).Committed)).Xdr(xs)
@@ -751,7 +751,7 @@ type WRITE3resfail struct {
 	File_wcc Wcc_data
 }
 
-func (v *WRITE3resfail) Xdr(xs *XdrState) {
+func (v *WRITE3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).File_wcc)).Xdr(xs)
 }
 
@@ -761,7 +761,7 @@ type WRITE3res struct {
 	Resfail WRITE3resfail
 }
 
-func (v *WRITE3res) Xdr(xs *XdrState) {
+func (v *WRITE3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -773,8 +773,8 @@ func (v *WRITE3res) Xdr(xs *XdrState) {
 
 type Createmode3 int32
 
-func (v *Createmode3) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Createmode3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 const UNCHECKED = 0
@@ -787,7 +787,7 @@ type Createhow3 struct {
 	Verf           Createverf3
 }
 
-func (v *Createhow3) Xdr(xs *XdrState) {
+func (v *Createhow3) Xdr(xs *xdr.XdrState) {
 	(*Createmode3)(&((v).Mode)).Xdr(xs)
 	switch (v).Mode {
 	case UNCHECKED:
@@ -804,7 +804,7 @@ type CREATE3args struct {
 	How   Createhow3
 }
 
-func (v *CREATE3args) Xdr(xs *XdrState) {
+func (v *CREATE3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).Where)).Xdr(xs)
 	(*Createhow3)(&((v).How)).Xdr(xs)
 }
@@ -815,7 +815,7 @@ type CREATE3resok struct {
 	Dir_wcc        Wcc_data
 }
 
-func (v *CREATE3resok) Xdr(xs *XdrState) {
+func (v *CREATE3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_fh3)(&((v).Obj)).Xdr(xs)
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
@@ -825,7 +825,7 @@ type CREATE3resfail struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *CREATE3resfail) Xdr(xs *XdrState) {
+func (v *CREATE3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -835,7 +835,7 @@ type CREATE3res struct {
 	Resfail CREATE3resfail
 }
 
-func (v *CREATE3res) Xdr(xs *XdrState) {
+func (v *CREATE3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -850,7 +850,7 @@ type MKDIR3args struct {
 	Attributes Sattr3
 }
 
-func (v *MKDIR3args) Xdr(xs *XdrState) {
+func (v *MKDIR3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).Where)).Xdr(xs)
 	(*Sattr3)(&((v).Attributes)).Xdr(xs)
 }
@@ -861,7 +861,7 @@ type MKDIR3resok struct {
 	Dir_wcc        Wcc_data
 }
 
-func (v *MKDIR3resok) Xdr(xs *XdrState) {
+func (v *MKDIR3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_fh3)(&((v).Obj)).Xdr(xs)
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
@@ -871,7 +871,7 @@ type MKDIR3resfail struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *MKDIR3resfail) Xdr(xs *XdrState) {
+func (v *MKDIR3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -881,7 +881,7 @@ type MKDIR3res struct {
 	Resfail MKDIR3resfail
 }
 
-func (v *MKDIR3res) Xdr(xs *XdrState) {
+func (v *MKDIR3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -896,7 +896,7 @@ type Symlinkdata3 struct {
 	Symlink_data       Nfspath3
 }
 
-func (v *Symlinkdata3) Xdr(xs *XdrState) {
+func (v *Symlinkdata3) Xdr(xs *xdr.XdrState) {
 	(*Sattr3)(&((v).Symlink_attributes)).Xdr(xs)
 	(*Nfspath3)(&((v).Symlink_data)).Xdr(xs)
 }
@@ -906,7 +906,7 @@ type SYMLINK3args struct {
 	Symlink Symlinkdata3
 }
 
-func (v *SYMLINK3args) Xdr(xs *XdrState) {
+func (v *SYMLINK3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).Where)).Xdr(xs)
 	(*Symlinkdata3)(&((v).Symlink)).Xdr(xs)
 }
@@ -917,7 +917,7 @@ type SYMLINK3resok struct {
 	Dir_wcc        Wcc_data
 }
 
-func (v *SYMLINK3resok) Xdr(xs *XdrState) {
+func (v *SYMLINK3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_fh3)(&((v).Obj)).Xdr(xs)
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
@@ -927,7 +927,7 @@ type SYMLINK3resfail struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *SYMLINK3resfail) Xdr(xs *XdrState) {
+func (v *SYMLINK3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -937,7 +937,7 @@ type SYMLINK3res struct {
 	Resfail SYMLINK3resfail
 }
 
-func (v *SYMLINK3res) Xdr(xs *XdrState) {
+func (v *SYMLINK3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -952,7 +952,7 @@ type Devicedata3 struct {
 	Spec           Specdata3
 }
 
-func (v *Devicedata3) Xdr(xs *XdrState) {
+func (v *Devicedata3) Xdr(xs *xdr.XdrState) {
 	(*Sattr3)(&((v).Dev_attributes)).Xdr(xs)
 	(*Specdata3)(&((v).Spec)).Xdr(xs)
 }
@@ -963,7 +963,7 @@ type Mknoddata3 struct {
 	Pipe_attributes Sattr3
 }
 
-func (v *Mknoddata3) Xdr(xs *XdrState) {
+func (v *Mknoddata3) Xdr(xs *xdr.XdrState) {
 	(*Ftype3)(&((v).Ftype)).Xdr(xs)
 	switch (v).Ftype {
 	case NF3CHR:
@@ -983,7 +983,7 @@ type MKNOD3args struct {
 	What  Mknoddata3
 }
 
-func (v *MKNOD3args) Xdr(xs *XdrState) {
+func (v *MKNOD3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).Where)).Xdr(xs)
 	(*Mknoddata3)(&((v).What)).Xdr(xs)
 }
@@ -994,7 +994,7 @@ type MKNOD3resok struct {
 	Dir_wcc        Wcc_data
 }
 
-func (v *MKNOD3resok) Xdr(xs *XdrState) {
+func (v *MKNOD3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_fh3)(&((v).Obj)).Xdr(xs)
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
@@ -1004,7 +1004,7 @@ type MKNOD3resfail struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *MKNOD3resfail) Xdr(xs *XdrState) {
+func (v *MKNOD3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -1014,7 +1014,7 @@ type MKNOD3res struct {
 	Resfail MKNOD3resfail
 }
 
-func (v *MKNOD3res) Xdr(xs *XdrState) {
+func (v *MKNOD3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1028,7 +1028,7 @@ type REMOVE3args struct {
 	Object Diropargs3
 }
 
-func (v *REMOVE3args) Xdr(xs *XdrState) {
+func (v *REMOVE3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).Object)).Xdr(xs)
 }
 
@@ -1036,7 +1036,7 @@ type REMOVE3resok struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *REMOVE3resok) Xdr(xs *XdrState) {
+func (v *REMOVE3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -1044,7 +1044,7 @@ type REMOVE3resfail struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *REMOVE3resfail) Xdr(xs *XdrState) {
+func (v *REMOVE3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -1054,7 +1054,7 @@ type REMOVE3res struct {
 	Resfail REMOVE3resfail
 }
 
-func (v *REMOVE3res) Xdr(xs *XdrState) {
+func (v *REMOVE3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1068,7 +1068,7 @@ type RMDIR3args struct {
 	Object Diropargs3
 }
 
-func (v *RMDIR3args) Xdr(xs *XdrState) {
+func (v *RMDIR3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).Object)).Xdr(xs)
 }
 
@@ -1076,7 +1076,7 @@ type RMDIR3resok struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *RMDIR3resok) Xdr(xs *XdrState) {
+func (v *RMDIR3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -1084,7 +1084,7 @@ type RMDIR3resfail struct {
 	Dir_wcc Wcc_data
 }
 
-func (v *RMDIR3resfail) Xdr(xs *XdrState) {
+func (v *RMDIR3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Dir_wcc)).Xdr(xs)
 }
 
@@ -1094,7 +1094,7 @@ type RMDIR3res struct {
 	Resfail RMDIR3resfail
 }
 
-func (v *RMDIR3res) Xdr(xs *XdrState) {
+func (v *RMDIR3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1109,7 +1109,7 @@ type RENAME3args struct {
 	To   Diropargs3
 }
 
-func (v *RENAME3args) Xdr(xs *XdrState) {
+func (v *RENAME3args) Xdr(xs *xdr.XdrState) {
 	(*Diropargs3)(&((v).From)).Xdr(xs)
 	(*Diropargs3)(&((v).To)).Xdr(xs)
 }
@@ -1119,7 +1119,7 @@ type RENAME3resok struct {
 	Todir_wcc   Wcc_data
 }
 
-func (v *RENAME3resok) Xdr(xs *XdrState) {
+func (v *RENAME3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Fromdir_wcc)).Xdr(xs)
 	(*Wcc_data)(&((v).Todir_wcc)).Xdr(xs)
 }
@@ -1129,7 +1129,7 @@ type RENAME3resfail struct {
 	Todir_wcc   Wcc_data
 }
 
-func (v *RENAME3resfail) Xdr(xs *XdrState) {
+func (v *RENAME3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).Fromdir_wcc)).Xdr(xs)
 	(*Wcc_data)(&((v).Todir_wcc)).Xdr(xs)
 }
@@ -1140,7 +1140,7 @@ type RENAME3res struct {
 	Resfail RENAME3resfail
 }
 
-func (v *RENAME3res) Xdr(xs *XdrState) {
+func (v *RENAME3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1155,7 +1155,7 @@ type LINK3args struct {
 	Link Diropargs3
 }
 
-func (v *LINK3args) Xdr(xs *XdrState) {
+func (v *LINK3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).File)).Xdr(xs)
 	(*Diropargs3)(&((v).Link)).Xdr(xs)
 }
@@ -1165,7 +1165,7 @@ type LINK3resok struct {
 	Linkdir_wcc     Wcc_data
 }
 
-func (v *LINK3resok) Xdr(xs *XdrState) {
+func (v *LINK3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).File_attributes)).Xdr(xs)
 	(*Wcc_data)(&((v).Linkdir_wcc)).Xdr(xs)
 }
@@ -1175,7 +1175,7 @@ type LINK3resfail struct {
 	Linkdir_wcc     Wcc_data
 }
 
-func (v *LINK3resfail) Xdr(xs *XdrState) {
+func (v *LINK3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).File_attributes)).Xdr(xs)
 	(*Wcc_data)(&((v).Linkdir_wcc)).Xdr(xs)
 }
@@ -1186,7 +1186,7 @@ type LINK3res struct {
 	Resfail LINK3resfail
 }
 
-func (v *LINK3res) Xdr(xs *XdrState) {
+func (v *LINK3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1203,7 +1203,7 @@ type READDIR3args struct {
 	Count      Count3
 }
 
-func (v *READDIR3args) Xdr(xs *XdrState) {
+func (v *READDIR3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Dir)).Xdr(xs)
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
 	(*Cookieverf3)(&((v).Cookieverf)).Xdr(xs)
@@ -1217,20 +1217,20 @@ type Entry3 struct {
 	Nextentry struct{ P *Entry3 }
 }
 
-func (v *Entry3) Xdr(xs *XdrState) {
+func (v *Entry3) Xdr(xs *xdr.XdrState) {
 	(*Fileid3)(&((v).Fileid)).Xdr(xs)
 	(*Filename3)(&((v).Name)).Xdr(xs)
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
 	if xs.Encoding() {
 		opted := (&((v).Nextentry)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Nextentry)).P = new(Entry3)
 			(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
@@ -1243,23 +1243,23 @@ type Dirlist3 struct {
 	Eof     bool
 }
 
-func (v *Dirlist3) Xdr(xs *XdrState) {
+func (v *Dirlist3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
 		opted := (&((v).Entries)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Entry3)((&((v).Entries)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Entries)).P = new(Entry3)
 			(*Entry3)((&((v).Entries)).P).Xdr(xs)
 		}
 	}
-	XdrBool(xs, &((v).Eof))
+	xdr.XdrBool(xs, &((v).Eof))
 }
 
 type READDIR3resok struct {
@@ -1268,7 +1268,7 @@ type READDIR3resok struct {
 	Reply          Dirlist3
 }
 
-func (v *READDIR3resok) Xdr(xs *XdrState) {
+func (v *READDIR3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Dir_attributes)).Xdr(xs)
 	(*Cookieverf3)(&((v).Cookieverf)).Xdr(xs)
 	(*Dirlist3)(&((v).Reply)).Xdr(xs)
@@ -1278,7 +1278,7 @@ type READDIR3resfail struct {
 	Dir_attributes Post_op_attr
 }
 
-func (v *READDIR3resfail) Xdr(xs *XdrState) {
+func (v *READDIR3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Dir_attributes)).Xdr(xs)
 }
 
@@ -1288,7 +1288,7 @@ type READDIR3res struct {
 	Resfail READDIR3resfail
 }
 
-func (v *READDIR3res) Xdr(xs *XdrState) {
+func (v *READDIR3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1306,7 +1306,7 @@ type READDIRPLUS3args struct {
 	Maxcount   Count3
 }
 
-func (v *READDIRPLUS3args) Xdr(xs *XdrState) {
+func (v *READDIRPLUS3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Dir)).Xdr(xs)
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
 	(*Cookieverf3)(&((v).Cookieverf)).Xdr(xs)
@@ -1323,7 +1323,7 @@ type Entryplus3 struct {
 	Nextentry       struct{ P *Entryplus3 }
 }
 
-func (v *Entryplus3) Xdr(xs *XdrState) {
+func (v *Entryplus3) Xdr(xs *xdr.XdrState) {
 	(*Fileid3)(&((v).Fileid)).Xdr(xs)
 	(*Filename3)(&((v).Name)).Xdr(xs)
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
@@ -1331,14 +1331,14 @@ func (v *Entryplus3) Xdr(xs *XdrState) {
 	(*Post_op_fh3)(&((v).Name_handle)).Xdr(xs)
 	if xs.Encoding() {
 		opted := (&((v).Nextentry)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Nextentry)).P = new(Entryplus3)
 			(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
@@ -1351,23 +1351,23 @@ type Dirlistplus3 struct {
 	Eof     bool
 }
 
-func (v *Dirlistplus3) Xdr(xs *XdrState) {
+func (v *Dirlistplus3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
 		opted := (&((v).Entries)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Entries)).P = new(Entryplus3)
 			(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
 		}
 	}
-	XdrBool(xs, &((v).Eof))
+	xdr.XdrBool(xs, &((v).Eof))
 }
 
 type READDIRPLUS3resok struct {
@@ -1376,7 +1376,7 @@ type READDIRPLUS3resok struct {
 	Reply          Dirlistplus3
 }
 
-func (v *READDIRPLUS3resok) Xdr(xs *XdrState) {
+func (v *READDIRPLUS3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Dir_attributes)).Xdr(xs)
 	(*Cookieverf3)(&((v).Cookieverf)).Xdr(xs)
 	(*Dirlistplus3)(&((v).Reply)).Xdr(xs)
@@ -1386,7 +1386,7 @@ type READDIRPLUS3resfail struct {
 	Dir_attributes Post_op_attr
 }
 
-func (v *READDIRPLUS3resfail) Xdr(xs *XdrState) {
+func (v *READDIRPLUS3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Dir_attributes)).Xdr(xs)
 }
 
@@ -1396,7 +1396,7 @@ type READDIRPLUS3res struct {
 	Resfail READDIRPLUS3resfail
 }
 
-func (v *READDIRPLUS3res) Xdr(xs *XdrState) {
+func (v *READDIRPLUS3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1410,7 +1410,7 @@ type FSSTAT3args struct {
 	Fsroot Nfs_fh3
 }
 
-func (v *FSSTAT3args) Xdr(xs *XdrState) {
+func (v *FSSTAT3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Fsroot)).Xdr(xs)
 }
 
@@ -1425,7 +1425,7 @@ type FSSTAT3resok struct {
 	Invarsec       Uint32
 }
 
-func (v *FSSTAT3resok) Xdr(xs *XdrState) {
+func (v *FSSTAT3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Size3)(&((v).Tbytes)).Xdr(xs)
 	(*Size3)(&((v).Fbytes)).Xdr(xs)
@@ -1440,7 +1440,7 @@ type FSSTAT3resfail struct {
 	Obj_attributes Post_op_attr
 }
 
-func (v *FSSTAT3resfail) Xdr(xs *XdrState) {
+func (v *FSSTAT3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 }
 
@@ -1450,7 +1450,7 @@ type FSSTAT3res struct {
 	Resfail FSSTAT3resfail
 }
 
-func (v *FSSTAT3res) Xdr(xs *XdrState) {
+func (v *FSSTAT3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1469,7 +1469,7 @@ type FSINFO3args struct {
 	Fsroot Nfs_fh3
 }
 
-func (v *FSINFO3args) Xdr(xs *XdrState) {
+func (v *FSINFO3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Fsroot)).Xdr(xs)
 }
 
@@ -1487,7 +1487,7 @@ type FSINFO3resok struct {
 	Properties     Uint32
 }
 
-func (v *FSINFO3resok) Xdr(xs *XdrState) {
+func (v *FSINFO3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Uint32)(&((v).Rtmax)).Xdr(xs)
 	(*Uint32)(&((v).Rtpref)).Xdr(xs)
@@ -1505,7 +1505,7 @@ type FSINFO3resfail struct {
 	Obj_attributes Post_op_attr
 }
 
-func (v *FSINFO3resfail) Xdr(xs *XdrState) {
+func (v *FSINFO3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 }
 
@@ -1515,7 +1515,7 @@ type FSINFO3res struct {
 	Resfail FSINFO3resfail
 }
 
-func (v *FSINFO3res) Xdr(xs *XdrState) {
+func (v *FSINFO3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1529,7 +1529,7 @@ type PATHCONF3args struct {
 	Object Nfs_fh3
 }
 
-func (v *PATHCONF3args) Xdr(xs *XdrState) {
+func (v *PATHCONF3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).Object)).Xdr(xs)
 }
 
@@ -1543,21 +1543,21 @@ type PATHCONF3resok struct {
 	Case_preserving  bool
 }
 
-func (v *PATHCONF3resok) Xdr(xs *XdrState) {
+func (v *PATHCONF3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 	(*Uint32)(&((v).Linkmax)).Xdr(xs)
 	(*Uint32)(&((v).Name_max)).Xdr(xs)
-	XdrBool(xs, &((v).No_trunc))
-	XdrBool(xs, &((v).Chown_restricted))
-	XdrBool(xs, &((v).Case_insensitive))
-	XdrBool(xs, &((v).Case_preserving))
+	xdr.XdrBool(xs, &((v).No_trunc))
+	xdr.XdrBool(xs, &((v).Chown_restricted))
+	xdr.XdrBool(xs, &((v).Case_insensitive))
+	xdr.XdrBool(xs, &((v).Case_preserving))
 }
 
 type PATHCONF3resfail struct {
 	Obj_attributes Post_op_attr
 }
 
-func (v *PATHCONF3resfail) Xdr(xs *XdrState) {
+func (v *PATHCONF3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Obj_attributes)).Xdr(xs)
 }
 
@@ -1567,7 +1567,7 @@ type PATHCONF3res struct {
 	Resfail PATHCONF3resfail
 }
 
-func (v *PATHCONF3res) Xdr(xs *XdrState) {
+func (v *PATHCONF3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1583,7 +1583,7 @@ type COMMIT3args struct {
 	Count  Count3
 }
 
-func (v *COMMIT3args) Xdr(xs *XdrState) {
+func (v *COMMIT3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).File)).Xdr(xs)
 	(*Offset3)(&((v).Offset)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
@@ -1594,7 +1594,7 @@ type COMMIT3resok struct {
 	Verf     Writeverf3
 }
 
-func (v *COMMIT3resok) Xdr(xs *XdrState) {
+func (v *COMMIT3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).File_wcc)).Xdr(xs)
 	(*Writeverf3)(&((v).Verf)).Xdr(xs)
 }
@@ -1603,7 +1603,7 @@ type COMMIT3resfail struct {
 	File_wcc Wcc_data
 }
 
-func (v *COMMIT3resfail) Xdr(xs *XdrState) {
+func (v *COMMIT3resfail) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).File_wcc)).Xdr(xs)
 }
 
@@ -1613,7 +1613,7 @@ type COMMIT3res struct {
 	Resfail COMMIT3resfail
 }
 
-func (v *COMMIT3res) Xdr(xs *XdrState) {
+func (v *COMMIT3res) Xdr(xs *xdr.XdrState) {
 	(*Nfsstat3)(&((v).Status)).Xdr(xs)
 	switch (v).Status {
 	case NFS3_OK:
@@ -1629,26 +1629,26 @@ const FHSIZE3 = 64
 
 type Fhandle3 []byte
 
-func (v *Fhandle3) Xdr(xs *XdrState) {
-	XdrVarArray(xs, FHSIZE3, (*[]byte)(v))
+func (v *Fhandle3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrVarArray(xs, FHSIZE3, (*[]byte)(v))
 }
 
 type Dirpath3 string
 
-func (v *Dirpath3) Xdr(xs *XdrState) {
-	XdrString(xs, MNTPATHLEN3, (*string)(v))
+func (v *Dirpath3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrString(xs, MNTPATHLEN3, (*string)(v))
 }
 
 type Name3 string
 
-func (v *Name3) Xdr(xs *XdrState) {
-	XdrString(xs, MNTNAMLEN3, (*string)(v))
+func (v *Name3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrString(xs, MNTNAMLEN3, (*string)(v))
 }
 
 type Mountstat3 int32
 
-func (v *Mountstat3) Xdr(xs *XdrState) {
-	XdrS32(xs, (*int32)(v))
+func (v *Mountstat3) Xdr(xs *xdr.XdrState) {
+	xdr.XdrS32(xs, (*int32)(v))
 }
 
 const MNT3_OK = 0
@@ -1675,18 +1675,18 @@ type Mountres3_ok struct {
 	Auth_flavors []int32
 }
 
-func (v *Mountres3_ok) Xdr(xs *XdrState) {
+func (v *Mountres3_ok) Xdr(xs *xdr.XdrState) {
 	(*Fhandle3)(&((v).Fhandle)).Xdr(xs)
 	{
 		var __arraysz uint32
 		xs.EncodingSetSize(&__arraysz, len(*&((v).Auth_flavors)))
-		XdrU32(xs, (*uint32)(&__arraysz))
+		xdr.XdrU32(xs, (*uint32)(&__arraysz))
 
 		if xs.Decoding() {
 			*&((v).Auth_flavors) = make([]int32, __arraysz)
 		}
 		for i := uint64(0); i < uint64(__arraysz); i++ {
-			XdrS32(xs, (*int32)(&((*(&((v).Auth_flavors)))[i])))
+			xdr.XdrS32(xs, (*int32)(&((*(&((v).Auth_flavors)))[i])))
 
 		}
 	}
@@ -1697,7 +1697,7 @@ type Mountres3 struct {
 	Mountinfo  Mountres3_ok
 }
 
-func (v *Mountres3) Xdr(xs *XdrState) {
+func (v *Mountres3) Xdr(xs *xdr.XdrState) {
 	(*Mountstat3)(&((v).Fhs_status)).Xdr(xs)
 	switch (v).Fhs_status {
 	case MNT3_OK:
@@ -1712,19 +1712,19 @@ type Mount3 struct {
 	Ml_next      struct{ P *Mount3 }
 }
 
-func (v *Mount3) Xdr(xs *XdrState) {
+func (v *Mount3) Xdr(xs *xdr.XdrState) {
 	(*Name3)(&((v).Ml_hostname)).Xdr(xs)
 	(*Dirpath3)(&((v).Ml_directory)).Xdr(xs)
 	if xs.Encoding() {
 		opted := (&((v).Ml_next)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Ml_next)).P = new(Mount3)
 			(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
@@ -1734,17 +1734,17 @@ func (v *Mount3) Xdr(xs *XdrState) {
 
 type Mountopt3 struct{ P *Mount3 }
 
-func (v *Mountopt3) Xdr(xs *XdrState) {
+func (v *Mountopt3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
 		opted := (v).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Mount3)((v).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(v).P = new(Mount3)
 			(*Mount3)((v).P).Xdr(xs)
@@ -1757,18 +1757,18 @@ type Groups3 struct {
 	Gr_next struct{ P *Groups3 }
 }
 
-func (v *Groups3) Xdr(xs *XdrState) {
+func (v *Groups3) Xdr(xs *xdr.XdrState) {
 	(*Name3)(&((v).Gr_name)).Xdr(xs)
 	if xs.Encoding() {
 		opted := (&((v).Gr_next)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Gr_next)).P = new(Groups3)
 			(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
@@ -1782,18 +1782,18 @@ type Exports3 struct {
 	Ex_next   struct{ P *Exports3 }
 }
 
-func (v *Exports3) Xdr(xs *XdrState) {
+func (v *Exports3) Xdr(xs *xdr.XdrState) {
 	(*Dirpath3)(&((v).Ex_dir)).Xdr(xs)
 	if xs.Encoding() {
 		opted := (&((v).Ex_groups)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Ex_groups)).P = new(Groups3)
 			(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
@@ -1801,14 +1801,14 @@ func (v *Exports3) Xdr(xs *XdrState) {
 	}
 	if xs.Encoding() {
 		opted := (&((v).Ex_next)).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(&((v).Ex_next)).P = new(Exports3)
 			(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
@@ -1818,17 +1818,17 @@ func (v *Exports3) Xdr(xs *XdrState) {
 
 type Exportsopt3 struct{ P *Exports3 }
 
-func (v *Exportsopt3) Xdr(xs *XdrState) {
+func (v *Exportsopt3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
 		opted := (v).P != nil
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(*Exports3)((v).P).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		XdrBool(xs, &opted)
+		xdr.XdrBool(xs, &opted)
 		if opted {
 			(v).P = new(Exports3)
 			(*Exports3)((v).P).Xdr(xs)
