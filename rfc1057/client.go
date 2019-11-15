@@ -71,7 +71,7 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 	}
 
 	var hdr [4]byte
-	binary.BigEndian.PutUint32(hdr[:], uint32(len(wb.buf)))
+	binary.BigEndian.PutUint32(hdr[:], (1<<31) | uint32(len(wb.buf)))
 	_, err = c.rw.Write(append(hdr[:], wb.buf...))
 	if err != nil {
 		return err
