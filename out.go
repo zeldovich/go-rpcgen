@@ -135,7 +135,24 @@ func (t declTypePtr) goType() string {
 }
 
 func (t declTypePtr) goXdr(valPtr string) string {
-	return t.t.goXdr(fmt.Sprintf("(%s).P", valPtr))
+	var res string
+	res += fmt.Sprintf("if xs.Encoding() {\n")
+	res += fmt.Sprintf("opted := (%s).P != nil\n", valPtr)
+	res += typeBool{}.goXdr("&opted")
+	res += fmt.Sprintf("if opted {\n")
+	res += t.t.goXdr(fmt.Sprintf("(%s).P", valPtr))
+	res += fmt.Sprintf("}\n")
+	res += fmt.Sprintf("}\n")
+
+	res += fmt.Sprintf("if xs.Decoding() {\n")
+	res += fmt.Sprintf("var opted bool\n")
+	res += typeBool{}.goXdr("&opted")
+	res += fmt.Sprintf("if opted {\n")
+	res += fmt.Sprintf("(%s).P = new(%s)\n", valPtr, t.t.goType())
+	res += t.t.goXdr(fmt.Sprintf("(%s).P", valPtr))
+	res += fmt.Sprintf("}\n")
+	res += fmt.Sprintf("}\n")
+	return res
 }
 
 type typespec interface {
@@ -323,21 +340,21 @@ type unionCaseDecl struct {
 
 type progCall struct {
 	name string
-	arg string
-	res string
-	id string
+	arg  string
+	res  string
+	id   string
 }
 
 type progVer struct {
-	name string
+	name  string
 	calls []progCall
-	id string
+	id    string
 }
 
 type progDef struct {
 	name string
 	vers []progVer
-	id string
+	id   string
 }
 
 func emitProg(d progDef) {

@@ -1,6 +1,7 @@
 package rfc1057
 
 import (
+	"encoding/binary"
 	"fmt"
 	"io"
 
@@ -8,17 +9,34 @@ import (
 )
 
 type Client struct {
-	rcv *xdr.XdrState
-	snd *xdr.XdrState
+	rw  io.ReadWriter
 	xid uint32
 }
 
 func MakeClient(rw io.ReadWriter) *Client {
 	return &Client{
-		rcv: xdr.MakeReader(rw),
-		snd: xdr.MakeWriter(rw),
+		rw:  rw,
 		xid: 0,
 	}
+}
+
+type rwBuffer struct {
+	buf []byte
+}
+
+func (rw *rwBuffer) Write(data []byte) (n int, err error) {
+	rw.buf = append(rw.buf, data...)
+	return len(data), nil
+}
+
+func (rw *rwBuffer) Read(buf []byte) (n int, err error) {
+	copy(buf, rw.buf)
+	rw.buf = rw.buf[len(buf):]
+	n = len(buf)
+	if n == 0 {
+		err = io.EOF
+	}
+	return
 }
 
 func (c *Client) Call(prog, vers, proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, resp xdr.Xdrable) error {
@@ -34,21 +52,48 @@ func (c *Client) Call(prog, vers, proc uint32, cred, verf Opaque_auth, args xdr.
 	req.Body.Cbody.Cred = cred
 	req.Body.Cbody.Verf = verf
 
-	req.Xdr(c.snd)
-	err := c.snd.Error()
+	wb := &rwBuffer{}
+	wr := xdr.MakeWriter(wb)
+	req.Xdr(wr)
+	err := wr.Error()
 	if err != nil {
 		return err
 	}
 
-	args.Xdr(c.snd)
-	err = c.snd.Error()
+	args.Xdr(wr)
+	err = wr.Error()
 	if err != nil {
 		return err
 	}
 
+	var hdr [4]byte
+	binary.BigEndian.PutUint32(hdr[:], uint32(len(wb.buf)))
+	_, err = c.rw.Write(append(hdr[:], wb.buf...))
+	if err != nil {
+		return err
+	}
+
+	_, err = io.ReadFull(c.rw, hdr[:])
+	if err != nil {
+		return err
+	}
+
+	hlen := binary.BigEndian.Uint32(hdr[:])
+	if hlen & (1 << 31) == 0 {
+		return fmt.Errorf("fragments not supported")
+	}
+
+	buf := make([]byte, hlen & 0x7fffffff)
+	_, err = io.ReadFull(c.rw, buf)
+	if err != nil {
+		return err
+	}
+
+	rb := &rwBuffer{buf}
+	rd := xdr.MakeReader(rb)
 	var res Rpc_msg
-	res.Xdr(c.rcv)
-	err = c.rcv.Error()
+	res.Xdr(rd)
+	err = rd.Error()
 	if err != nil {
 		return err
 	}
@@ -69,8 +114,8 @@ func (c *Client) Call(prog, vers, proc uint32, cred, verf Opaque_auth, args xdr.
 		return fmt.Errorf("accept_stat %d", res.Body.Rbody.Areply.Reply_data.Stat)
 	}
 
-	resp.Xdr(c.rcv)
-	err = c.rcv.Error()
+	resp.Xdr(rd)
+	err = rd.Error()
 	if err != nil {
 		return err
 	}

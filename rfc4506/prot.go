@@ -1221,7 +1221,21 @@ func (v *Entry3) Xdr(xs *XdrState) {
 	(*Fileid3)(&((v).Fileid)).Xdr(xs)
 	(*Filename3)(&((v).Name)).Xdr(xs)
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
-	(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Nextentry)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Nextentry)).P = new(Entry3)
+			(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
+		}
+	}
 }
 
 type Dirlist3 struct {
@@ -1230,7 +1244,21 @@ type Dirlist3 struct {
 }
 
 func (v *Dirlist3) Xdr(xs *XdrState) {
-	(*Entry3)((&((v).Entries)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Entries)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Entry3)((&((v).Entries)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Entries)).P = new(Entry3)
+			(*Entry3)((&((v).Entries)).P).Xdr(xs)
+		}
+	}
 	XdrBool(xs, &((v).Eof))
 }
 
@@ -1301,7 +1329,21 @@ func (v *Entryplus3) Xdr(xs *XdrState) {
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
 	(*Post_op_attr)(&((v).Name_attributes)).Xdr(xs)
 	(*Post_op_fh3)(&((v).Name_handle)).Xdr(xs)
-	(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Nextentry)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Nextentry)).P = new(Entryplus3)
+			(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
+		}
+	}
 }
 
 type Dirlistplus3 struct {
@@ -1310,7 +1352,21 @@ type Dirlistplus3 struct {
 }
 
 func (v *Dirlistplus3) Xdr(xs *XdrState) {
-	(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Entries)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Entries)).P = new(Entryplus3)
+			(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
+		}
+	}
 	XdrBool(xs, &((v).Eof))
 }
 
@@ -1659,13 +1715,41 @@ type Mount3 struct {
 func (v *Mount3) Xdr(xs *XdrState) {
 	(*Name3)(&((v).Ml_hostname)).Xdr(xs)
 	(*Dirpath3)(&((v).Ml_directory)).Xdr(xs)
-	(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Ml_next)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Ml_next)).P = new(Mount3)
+			(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
+		}
+	}
 }
 
 type Mountopt3 struct{ P *Mount3 }
 
 func (v *Mountopt3) Xdr(xs *XdrState) {
-	(*Mount3)((v).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (v).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Mount3)((v).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(v).P = new(Mount3)
+			(*Mount3)((v).P).Xdr(xs)
+		}
+	}
 }
 
 type Groups3 struct {
@@ -1675,7 +1759,21 @@ type Groups3 struct {
 
 func (v *Groups3) Xdr(xs *XdrState) {
 	(*Name3)(&((v).Gr_name)).Xdr(xs)
-	(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Gr_next)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Gr_next)).P = new(Groups3)
+			(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
+		}
+	}
 }
 
 type Exports3 struct {
@@ -1686,12 +1784,54 @@ type Exports3 struct {
 
 func (v *Exports3) Xdr(xs *XdrState) {
 	(*Dirpath3)(&((v).Ex_dir)).Xdr(xs)
-	(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
-	(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (&((v).Ex_groups)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Ex_groups)).P = new(Groups3)
+			(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
+		}
+	}
+	if xs.Encoding() {
+		opted := (&((v).Ex_next)).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(&((v).Ex_next)).P = new(Exports3)
+			(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
+		}
+	}
 }
 
 type Exportsopt3 struct{ P *Exports3 }
 
 func (v *Exportsopt3) Xdr(xs *XdrState) {
-	(*Exports3)((v).P).Xdr(xs)
+	if xs.Encoding() {
+		opted := (v).P != nil
+		XdrBool(xs, &opted)
+		if opted {
+			(*Exports3)((v).P).Xdr(xs)
+		}
+	}
+	if xs.Decoding() {
+		var opted bool
+		XdrBool(xs, &opted)
+		if opted {
+			(v).P = new(Exports3)
+			(*Exports3)((v).P).Xdr(xs)
+		}
+	}
 }

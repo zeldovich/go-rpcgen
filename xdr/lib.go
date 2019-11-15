@@ -27,7 +27,7 @@ type XdrState struct {
 
 func MakeReader(r io.Reader) *XdrState {
 	return &XdrState{
-		err: nil,
+		err:    nil,
 		reader: r,
 		writer: nil,
 	}
@@ -35,7 +35,7 @@ func MakeReader(r io.Reader) *XdrState {
 
 func MakeWriter(w io.Writer) *XdrState {
 	return &XdrState{
-		err: nil,
+		err:    nil,
 		reader: nil,
 		writer: w,
 	}
@@ -256,3 +256,7 @@ func XdrString(xs *XdrState, maxlen int, v *string) {
 		xdrRW(xs, make([]byte, (4-len(*v)%4)%4))
 	}
 }
+
+type Void struct{}
+
+func (_ *Void) Xdr(xs *XdrState) {}
