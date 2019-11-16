@@ -1,4 +1,4 @@
-package rfc4506
+package rfc1813
 
 import "github.com/zeldovich/go-rpcgen/xdr"
 

@@ -5,7 +5,7 @@ import (
 	"net"
 
 	"github.com/zeldovich/go-rpcgen/rfc1057"
-	"github.com/zeldovich/go-rpcgen/rfc4506"
+	"github.com/zeldovich/go-rpcgen/rfc1813"
 	"github.com/zeldovich/go-rpcgen/xdr"
 )
 
@@ -38,17 +38,17 @@ func pmap_client(host string, prog, vers uint32) *rfc1057.Client {
 	return rfc1057.MakeClient(svcc, prog, vers)
 }
 
-func lookup(c *rfc1057.Client, cred, verf rfc1057.Opaque_auth, fh rfc4506.Nfs_fh3, name string) rfc4506.Nfs_fh3 {
-	var arg rfc4506.LOOKUP3args
-	var res rfc4506.LOOKUP3res
+func lookup(c *rfc1057.Client, cred, verf rfc1057.Opaque_auth, fh rfc1813.Nfs_fh3, name string) rfc1813.Nfs_fh3 {
+	var arg rfc1813.LOOKUP3args
+	var res rfc1813.LOOKUP3res
 	arg.What.Dir = fh
-	arg.What.Name = rfc4506.Filename3(name)
-	err := c.Call(rfc4506.NFSPROC3_LOOKUP, cred, verf, &arg, &res)
+	arg.What.Name = rfc1813.Filename3(name)
+	err := c.Call(rfc1813.NFSPROC3_LOOKUP, cred, verf, &arg, &res)
 	if err != nil {
 		panic(err)
 	}
 
-	if res.Status != rfc4506.NFS3_OK {
+	if res.Status != rfc1813.NFS3_OK {
 		panic(fmt.Sprintf("lookup status %d", res.Status))
 	}
 
@@ -69,20 +69,20 @@ func main() {
 	var cred_none rfc1057.Opaque_auth
 	cred_none.Flavor = rfc1057.AUTH_NONE
 
-	mnt := pmap_client("localhost", rfc4506.MOUNT_PROGRAM, rfc4506.MOUNT_V3)
+	mnt := pmap_client("localhost", rfc1813.MOUNT_PROGRAM, rfc1813.MOUNT_V3)
 
-	arg := rfc4506.Dirpath3("/")
-	var res rfc4506.Mountres3
-	err = mnt.Call(rfc4506.MOUNTPROC3_MNT, cred_none, cred_none, &arg, &res)
+	arg := rfc1813.Dirpath3("/")
+	var res rfc1813.Mountres3
+	err = mnt.Call(rfc1813.MOUNTPROC3_MNT, cred_none, cred_none, &arg, &res)
 	if err != nil {
 		panic(err)
 	}
 
-	if res.Fhs_status != rfc4506.MNT3_OK {
+	if res.Fhs_status != rfc1813.MNT3_OK {
 		panic(fmt.Sprintf("mount status %d", res.Fhs_status))
 	}
 
-	var root_fh rfc4506.Nfs_fh3
+	var root_fh rfc1813.Nfs_fh3
 	root_fh.Data = res.Mountinfo.Fhandle
 
 	for _, flavor := range res.Mountinfo.Auth_flavors {
@@ -91,20 +91,20 @@ func main() {
 
 	fmt.Printf("root fh %v\n", root_fh)
 
-	nfs := pmap_client("localhost", rfc4506.NFS_PROGRAM, rfc4506.NFS_V3)
+	nfs := pmap_client("localhost", rfc1813.NFS_PROGRAM, rfc1813.NFS_V3)
 
 	foo := lookup(nfs, cred_unix, cred_none, root_fh, "foo")
 	bar := lookup(nfs, cred_unix, cred_none, foo, "bar")
 
 	fmt.Printf("bar = %v\n", bar)
 
-	var arg1 rfc4506.RENAME3args
-	var res1 rfc4506.RENAME3res
+	var arg1 rfc1813.RENAME3args
+	var res1 rfc1813.RENAME3res
 	arg1.From.Dir = root_fh
 	arg1.From.Name = "foo"
 	arg1.To.Dir = bar
 	arg1.To.Name = "foonew"
-	err = nfs.Call(rfc4506.NFSPROC3_RENAME, cred_unix, cred_none, &arg1, &res1)
+	err = nfs.Call(rfc1813.NFSPROC3_RENAME, cred_unix, cred_none, &arg1, &res1)
 	if err != nil {
 		panic(err)
 	}
