@@ -423,28 +423,7 @@ func emitStruct(ident string, val []decl) {
 }
 
 func emitUnion(ident string, val typeUnion) {
-	fmt.Fprintf(out, "type %s struct {\n", i(ident))
-
-	switch v := val.switchDecl.(type) {
-	case declName:
-		fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
-	}
-
-	for _, c := range val.cases.cases {
-		switch v := c.body.(type) {
-		case declName:
-			fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
-		}
-	}
-
-	if val.cases.def != nil {
-		switch v := val.cases.def.(type) {
-		case declName:
-			fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
-		}
-	}
-
-	fmt.Fprintf(out, "}\n")
+	fmt.Fprintf(out, "type %s %s\n", i(ident), val.goType())
 
 	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", val.goXdr("v"))
