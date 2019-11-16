@@ -9,38 +9,19 @@ import (
 )
 
 type Client struct {
-	rw  io.ReadWriter
-	xid uint32
+	rw   io.ReadWriter
+	xid  uint32
 	prog uint32
 	vers uint32
 }
 
 func MakeClient(rw io.ReadWriter, prog, vers uint32) *Client {
 	return &Client{
-		rw:  rw,
-		xid: 0,
+		rw:   rw,
+		xid:  0,
 		prog: prog,
 		vers: vers,
 	}
-}
-
-type rwBuffer struct {
-	buf []byte
-}
-
-func (rw *rwBuffer) Write(data []byte) (n int, err error) {
-	rw.buf = append(rw.buf, data...)
-	return len(data), nil
-}
-
-func (rw *rwBuffer) Read(buf []byte) (n int, err error) {
-	copy(buf, rw.buf)
-	rw.buf = rw.buf[len(buf):]
-	n = len(buf)
-	if n == 0 {
-		err = io.EOF
-	}
-	return
 }
 
 func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, resp xdr.Xdrable) error {
@@ -71,7 +52,7 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 	}
 
 	var hdr [4]byte
-	binary.BigEndian.PutUint32(hdr[:], (1<<31) | uint32(len(wb.buf)))
+	binary.BigEndian.PutUint32(hdr[:], (1<<31)|uint32(len(wb.buf)))
 	_, err = c.rw.Write(append(hdr[:], wb.buf...))
 	if err != nil {
 		return err
