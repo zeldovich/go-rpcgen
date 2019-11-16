@@ -8,10 +8,10 @@ func (v *Auth_flavor) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const AUTH_NONE = 0
-const AUTH_UNIX = 1
-const AUTH_SHORT = 2
-const AUTH_DES = 3
+const AUTH_NONE Auth_flavor = 0
+const AUTH_UNIX Auth_flavor = 1
+const AUTH_SHORT Auth_flavor = 2
+const AUTH_DES Auth_flavor = 3
 
 type Opaque_auth struct {
 	Flavor Auth_flavor
@@ -29,8 +29,8 @@ func (v *Msg_type) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const CALL = 0
-const REPLY = 1
+const CALL Msg_type = 0
+const REPLY Msg_type = 1
 
 type Reply_stat int32
 
@@ -38,8 +38,8 @@ func (v *Reply_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const MSG_ACCEPTED = 0
-const MSG_DENIED = 1
+const MSG_ACCEPTED Reply_stat = 0
+const MSG_DENIED Reply_stat = 1
 
 type Accept_stat int32
 
@@ -47,11 +47,11 @@ func (v *Accept_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const SUCCESS = 0
-const PROG_UNAVAIL = 1
-const PROG_MISMATCH = 2
-const PROC_UNAVAIL = 3
-const GARBAGE_ARGS = 4
+const SUCCESS Accept_stat = 0
+const PROG_UNAVAIL Accept_stat = 1
+const PROG_MISMATCH Accept_stat = 2
+const PROC_UNAVAIL Accept_stat = 3
+const GARBAGE_ARGS Accept_stat = 4
 
 type Reject_stat int32
 
@@ -59,8 +59,8 @@ func (v *Reject_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const RPC_MISMATCH = 0
-const AUTH_ERROR = 1
+const RPC_MISMATCH Reject_stat = 0
+const AUTH_ERROR Reject_stat = 1
 
 type Auth_stat int32
 
@@ -68,11 +68,11 @@ func (v *Auth_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const AUTH_BADCRED = 1
-const AUTH_REJECTEDCRED = 2
-const AUTH_BADVERF = 3
-const AUTH_REJECTEDVERF = 4
-const AUTH_TOOWEAK = 5
+const AUTH_BADCRED Auth_stat = 1
+const AUTH_REJECTEDCRED Auth_stat = 2
+const AUTH_BADVERF Auth_stat = 3
+const AUTH_REJECTEDVERF Auth_stat = 4
+const AUTH_TOOWEAK Auth_stat = 5
 
 type Rpc_msg struct {
 	Xid  uint32
@@ -278,11 +278,11 @@ func (v *Call_result) Xdr(xs *xdr.XdrState) {
 	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Res)))
 }
 
-const PMAP_PROG = 100000
-const PMAP_VERS = 2
-const PMAPPROC_NULL = 0
-const PMAPPROC_SET = 1
-const PMAPPROC_UNSET = 2
-const PMAPPROC_GETPORT = 3
-const PMAPPROC_DUMP = 4
-const PMAPPROC_CALLIT = 5
+const PMAP_PROG uint32 = 100000
+const PMAP_VERS uint32 = 2
+const PMAPPROC_NULL uint32 = 0
+const PMAPPROC_SET uint32 = 1
+const PMAPPROC_UNSET uint32 = 2
+const PMAPPROC_GETPORT uint32 = 3
+const PMAPPROC_DUMP uint32 = 4
+const PMAPPROC_CALLIT uint32 = 5

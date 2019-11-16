@@ -370,12 +370,12 @@ type progDef struct {
 }
 
 func emitProg(d progDef) {
-	fmt.Fprintf(out, "const %s = %s\n", i(d.name), d.id)
+	fmt.Fprintf(out, "const %s uint32 = %s\n", i(d.name), d.id)
 	for _, v := range d.vers {
-		fmt.Fprintf(out, "const %s = %s\n", i(v.name), v.id)
+		fmt.Fprintf(out, "const %s uint32 = %s\n", i(v.name), v.id)
 
 		for _, c := range v.calls {
-			fmt.Fprintf(out, "const %s = %s\n", i(c.name), c.id)
+			fmt.Fprintf(out, "const %s uint32 = %s\n", i(c.name), c.id)
 		}
 	}
 }
@@ -403,7 +403,7 @@ func emitEnum(ident string, val []enumItem) {
 	fmt.Fprintf(out, "}\n")
 
 	for _, v := range val {
-		fmt.Fprintf(out, "const %s = %s\n", i(v.name), v.val)
+		fmt.Fprintf(out, "const %s %s = %s\n", i(v.name), i(ident), v.val)
 	}
 }
 

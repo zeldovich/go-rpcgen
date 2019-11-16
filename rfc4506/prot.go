@@ -117,35 +117,35 @@ func (v *Nfsstat3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const NFS3_OK = 0
-const NFS3ERR_PERM = 1
-const NFS3ERR_NOENT = 2
-const NFS3ERR_IO = 5
-const NFS3ERR_NXIO = 6
-const NFS3ERR_ACCES = 13
-const NFS3ERR_EXIST = 17
-const NFS3ERR_XDEV = 18
-const NFS3ERR_NODEV = 19
-const NFS3ERR_NOTDIR = 20
-const NFS3ERR_ISDIR = 21
-const NFS3ERR_INVAL = 22
-const NFS3ERR_FBIG = 27
-const NFS3ERR_NOSPC = 28
-const NFS3ERR_ROFS = 30
-const NFS3ERR_MLINK = 31
-const NFS3ERR_NAMETOOLONG = 63
-const NFS3ERR_NOTEMPTY = 66
-const NFS3ERR_DQUOT = 69
-const NFS3ERR_STALE = 70
-const NFS3ERR_REMOTE = 71
-const NFS3ERR_BADHANDLE = 10001
-const NFS3ERR_NOT_SYNC = 10002
-const NFS3ERR_BAD_COOKIE = 10003
-const NFS3ERR_NOTSUPP = 10004
-const NFS3ERR_TOOSMALL = 10005
-const NFS3ERR_SERVERFAULT = 10006
-const NFS3ERR_BADTYPE = 10007
-const NFS3ERR_JUKEBOX = 10008
+const NFS3_OK Nfsstat3 = 0
+const NFS3ERR_PERM Nfsstat3 = 1
+const NFS3ERR_NOENT Nfsstat3 = 2
+const NFS3ERR_IO Nfsstat3 = 5
+const NFS3ERR_NXIO Nfsstat3 = 6
+const NFS3ERR_ACCES Nfsstat3 = 13
+const NFS3ERR_EXIST Nfsstat3 = 17
+const NFS3ERR_XDEV Nfsstat3 = 18
+const NFS3ERR_NODEV Nfsstat3 = 19
+const NFS3ERR_NOTDIR Nfsstat3 = 20
+const NFS3ERR_ISDIR Nfsstat3 = 21
+const NFS3ERR_INVAL Nfsstat3 = 22
+const NFS3ERR_FBIG Nfsstat3 = 27
+const NFS3ERR_NOSPC Nfsstat3 = 28
+const NFS3ERR_ROFS Nfsstat3 = 30
+const NFS3ERR_MLINK Nfsstat3 = 31
+const NFS3ERR_NAMETOOLONG Nfsstat3 = 63
+const NFS3ERR_NOTEMPTY Nfsstat3 = 66
+const NFS3ERR_DQUOT Nfsstat3 = 69
+const NFS3ERR_STALE Nfsstat3 = 70
+const NFS3ERR_REMOTE Nfsstat3 = 71
+const NFS3ERR_BADHANDLE Nfsstat3 = 10001
+const NFS3ERR_NOT_SYNC Nfsstat3 = 10002
+const NFS3ERR_BAD_COOKIE Nfsstat3 = 10003
+const NFS3ERR_NOTSUPP Nfsstat3 = 10004
+const NFS3ERR_TOOSMALL Nfsstat3 = 10005
+const NFS3ERR_SERVERFAULT Nfsstat3 = 10006
+const NFS3ERR_BADTYPE Nfsstat3 = 10007
+const NFS3ERR_JUKEBOX Nfsstat3 = 10008
 
 type Ftype3 int32
 
@@ -153,13 +153,13 @@ func (v *Ftype3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const NF3REG = 1
-const NF3DIR = 2
-const NF3BLK = 3
-const NF3CHR = 4
-const NF3LNK = 5
-const NF3SOCK = 6
-const NF3FIFO = 7
+const NF3REG Ftype3 = 1
+const NF3DIR Ftype3 = 2
+const NF3BLK Ftype3 = 3
+const NF3CHR Ftype3 = 4
+const NF3LNK Ftype3 = 5
+const NF3SOCK Ftype3 = 6
+const NF3FIFO Ftype3 = 7
 
 type Specdata3 struct {
 	Specdata1 Uint32
@@ -291,9 +291,9 @@ func (v *Time_how) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const DONT_CHANGE = 0
-const SET_TO_SERVER_TIME = 1
-const SET_TO_CLIENT_TIME = 2
+const DONT_CHANGE Time_how = 0
+const SET_TO_SERVER_TIME Time_how = 1
+const SET_TO_CLIENT_TIME Time_how = 2
 
 type Set_mode3 struct {
 	Set_it bool
@@ -407,30 +407,30 @@ func (v *Diropargs3) Xdr(xs *xdr.XdrState) {
 	(*Filename3)(&((v).Name)).Xdr(xs)
 }
 
-const NFS_PROGRAM = 100003
-const NFS_V3 = 3
-const NFSPROC3_NULL = 0
-const NFSPROC3_GETATTR = 1
-const NFSPROC3_SETATTR = 2
-const NFSPROC3_LOOKUP = 3
-const NFSPROC3_ACCESS = 4
-const NFSPROC3_READLINK = 5
-const NFSPROC3_READ = 6
-const NFSPROC3_WRITE = 7
-const NFSPROC3_CREATE = 8
-const NFSPROC3_MKDIR = 9
-const NFSPROC3_SYMLINK = 10
-const NFSPROC3_MKNOD = 11
-const NFSPROC3_REMOVE = 12
-const NFSPROC3_RMDIR = 13
-const NFSPROC3_RENAME = 14
-const NFSPROC3_LINK = 15
-const NFSPROC3_READDIR = 16
-const NFSPROC3_READDIRPLUS = 17
-const NFSPROC3_FSSTAT = 18
-const NFSPROC3_FSINFO = 19
-const NFSPROC3_PATHCONF = 20
-const NFSPROC3_COMMIT = 21
+const NFS_PROGRAM uint32 = 100003
+const NFS_V3 uint32 = 3
+const NFSPROC3_NULL uint32 = 0
+const NFSPROC3_GETATTR uint32 = 1
+const NFSPROC3_SETATTR uint32 = 2
+const NFSPROC3_LOOKUP uint32 = 3
+const NFSPROC3_ACCESS uint32 = 4
+const NFSPROC3_READLINK uint32 = 5
+const NFSPROC3_READ uint32 = 6
+const NFSPROC3_WRITE uint32 = 7
+const NFSPROC3_CREATE uint32 = 8
+const NFSPROC3_MKDIR uint32 = 9
+const NFSPROC3_SYMLINK uint32 = 10
+const NFSPROC3_MKNOD uint32 = 11
+const NFSPROC3_REMOVE uint32 = 12
+const NFSPROC3_RMDIR uint32 = 13
+const NFSPROC3_RENAME uint32 = 14
+const NFSPROC3_LINK uint32 = 15
+const NFSPROC3_READDIR uint32 = 16
+const NFSPROC3_READDIRPLUS uint32 = 17
+const NFSPROC3_FSSTAT uint32 = 18
+const NFSPROC3_FSINFO uint32 = 19
+const NFSPROC3_PATHCONF uint32 = 20
+const NFSPROC3_COMMIT uint32 = 21
 
 type GETATTR3args struct {
 	Object Nfs_fh3
@@ -713,9 +713,9 @@ func (v *Stable_how) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const UNSTABLE = 0
-const DATA_SYNC = 1
-const FILE_SYNC = 2
+const UNSTABLE Stable_how = 0
+const DATA_SYNC Stable_how = 1
+const FILE_SYNC Stable_how = 2
 
 type WRITE3args struct {
 	File   Nfs_fh3
@@ -777,9 +777,9 @@ func (v *Createmode3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const UNCHECKED = 0
-const GUARDED = 1
-const EXCLUSIVE = 2
+const UNCHECKED Createmode3 = 0
+const GUARDED Createmode3 = 1
+const EXCLUSIVE Createmode3 = 2
 
 type Createhow3 struct {
 	Mode           Createmode3
@@ -1651,24 +1651,24 @@ func (v *Mountstat3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
 
-const MNT3_OK = 0
-const MNT3ERR_PERM = 1
-const MNT3ERR_NOENT = 2
-const MNT3ERR_IO = 5
-const MNT3ERR_ACCES = 13
-const MNT3ERR_NOTDIR = 20
-const MNT3ERR_INVAL = 22
-const MNT3ERR_NAMETOOLONG = 63
-const MNT3ERR_NOTSUPP = 10004
-const MNT3ERR_SERVERFAULT = 10006
-const MOUNT_PROGRAM = 100005
-const MOUNT_V3 = 3
-const MOUNTPROC3_NULL = 0
-const MOUNTPROC3_MNT = 1
-const MOUNTPROC3_DUMP = 2
-const MOUNTPROC3_UMNT = 3
-const MOUNTPROC3_UMNTALL = 4
-const MOUNTPROC3_EXPORT = 5
+const MNT3_OK Mountstat3 = 0
+const MNT3ERR_PERM Mountstat3 = 1
+const MNT3ERR_NOENT Mountstat3 = 2
+const MNT3ERR_IO Mountstat3 = 5
+const MNT3ERR_ACCES Mountstat3 = 13
+const MNT3ERR_NOTDIR Mountstat3 = 20
+const MNT3ERR_INVAL Mountstat3 = 22
+const MNT3ERR_NAMETOOLONG Mountstat3 = 63
+const MNT3ERR_NOTSUPP Mountstat3 = 10004
+const MNT3ERR_SERVERFAULT Mountstat3 = 10006
+const MOUNT_PROGRAM uint32 = 100005
+const MOUNT_V3 uint32 = 3
+const MOUNTPROC3_NULL uint32 = 0
+const MOUNTPROC3_MNT uint32 = 1
+const MOUNTPROC3_DUMP uint32 = 2
+const MOUNTPROC3_UMNT uint32 = 3
+const MOUNTPROC3_UMNTALL uint32 = 4
+const MOUNTPROC3_EXPORT uint32 = 5
 
 type Mountres3_ok struct {
 	Fhandle      Fhandle3
