@@ -1,11 +1,11 @@
 GOPATH	:= $(shell go env GOPATH)
 
-all: rfc1813/prot.go rfc1057/prot.go
+all: rfc1813/xdr.go rfc1057/xdr.go
 
 $(GOPATH)/bin/go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
 	go generate
 	go install .
 
-%/prot.go: %/prot.x $(GOPATH)/bin/go-rpcgen
-	$(GOPATH)/bin/go-rpcgen -i $< -o $@ -p $(patsubst %/prot.go,%,$@)
-	go vet $@
+%/xdr.go %/types.go: %/prot.x $(GOPATH)/bin/go-rpcgen
+	$(GOPATH)/bin/go-rpcgen -i $< -o $@ -t $(@D)/types.go -p $(@D)
+	go vet ./$(@D)

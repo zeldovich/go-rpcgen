@@ -2,87 +2,28 @@ package rfc1057
 
 import "github.com/zeldovich/go-rpcgen/xdr"
 
-type Auth_flavor int32
-
 func (v *Auth_flavor) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
-
-const AUTH_NONE Auth_flavor = 0
-const AUTH_UNIX Auth_flavor = 1
-const AUTH_SHORT Auth_flavor = 2
-const AUTH_DES Auth_flavor = 3
-
-type Opaque_auth struct {
-	Flavor Auth_flavor
-	Body   []byte
-}
-
 func (v *Opaque_auth) Xdr(xs *xdr.XdrState) {
 	(*Auth_flavor)(&((v).Flavor)).Xdr(xs)
 	xdr.XdrVarArray(xs, 400, (*[]byte)(&((v).Body)))
 }
-
-type Msg_type int32
-
 func (v *Msg_type) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
-
-const CALL Msg_type = 0
-const REPLY Msg_type = 1
-
-type Reply_stat int32
-
 func (v *Reply_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
-
-const MSG_ACCEPTED Reply_stat = 0
-const MSG_DENIED Reply_stat = 1
-
-type Accept_stat int32
-
 func (v *Accept_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
-
-const SUCCESS Accept_stat = 0
-const PROG_UNAVAIL Accept_stat = 1
-const PROG_MISMATCH Accept_stat = 2
-const PROC_UNAVAIL Accept_stat = 3
-const GARBAGE_ARGS Accept_stat = 4
-
-type Reject_stat int32
-
 func (v *Reject_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
-
-const RPC_MISMATCH Reject_stat = 0
-const AUTH_ERROR Reject_stat = 1
-
-type Auth_stat int32
-
 func (v *Auth_stat) Xdr(xs *xdr.XdrState) {
 	xdr.XdrS32(xs, (*int32)(v))
 }
-
-const AUTH_BADCRED Auth_stat = 1
-const AUTH_REJECTEDCRED Auth_stat = 2
-const AUTH_BADVERF Auth_stat = 3
-const AUTH_REJECTEDVERF Auth_stat = 4
-const AUTH_TOOWEAK Auth_stat = 5
-
-type Rpc_msg struct {
-	Xid  uint32
-	Body struct {
-		Mtype Msg_type
-		Cbody Call_body
-		Rbody Reply_body
-	}
-}
-
 func (v *Rpc_msg) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Xid)))
 	(*Msg_type)(&((&((v).Body)).Mtype)).Xdr(xs)
@@ -93,16 +34,6 @@ func (v *Rpc_msg) Xdr(xs *xdr.XdrState) {
 		(*Reply_body)(&((&((v).Body)).Rbody)).Xdr(xs)
 	}
 }
-
-type Call_body struct {
-	Rpcvers uint32
-	Prog    uint32
-	Vers    uint32
-	Proc    uint32
-	Cred    Opaque_auth
-	Verf    Opaque_auth
-}
-
 func (v *Call_body) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Rpcvers)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Prog)))
@@ -111,13 +42,6 @@ func (v *Call_body) Xdr(xs *xdr.XdrState) {
 	(*Opaque_auth)(&((v).Cred)).Xdr(xs)
 	(*Opaque_auth)(&((v).Verf)).Xdr(xs)
 }
-
-type Reply_body struct {
-	Stat   Reply_stat
-	Areply Accepted_reply
-	Rreply Rejected_reply
-}
-
 func (v *Reply_body) Xdr(xs *xdr.XdrState) {
 	(*Reply_stat)(&((v).Stat)).Xdr(xs)
 	switch (v).Stat {
@@ -127,19 +51,6 @@ func (v *Reply_body) Xdr(xs *xdr.XdrState) {
 		(*Rejected_reply)(&((v).Rreply)).Xdr(xs)
 	}
 }
-
-type Accepted_reply struct {
-	Verf       Opaque_auth
-	Reply_data struct {
-		Stat          Accept_stat
-		Results       [0]byte
-		Mismatch_info struct {
-			Low  uint32
-			High uint32
-		}
-	}
-}
-
 func (v *Accepted_reply) Xdr(xs *xdr.XdrState) {
 	(*Opaque_auth)(&((v).Verf)).Xdr(xs)
 	(*Accept_stat)(&((&((v).Reply_data)).Stat)).Xdr(xs)
@@ -152,16 +63,6 @@ func (v *Accepted_reply) Xdr(xs *xdr.XdrState) {
 	default:
 	}
 }
-
-type Rejected_reply struct {
-	Stat          Reject_stat
-	Mismatch_info struct {
-		Low  uint32
-		High uint32
-	}
-	Astat Auth_stat
-}
-
 func (v *Rejected_reply) Xdr(xs *xdr.XdrState) {
 	(*Reject_stat)(&((v).Stat)).Xdr(xs)
 	switch (v).Stat {
@@ -172,15 +73,6 @@ func (v *Rejected_reply) Xdr(xs *xdr.XdrState) {
 		(*Auth_stat)(&((v).Astat)).Xdr(xs)
 	}
 }
-
-type Auth_unix struct {
-	Stamp       uint32
-	Machinename string
-	Uid         uint32
-	Gid         uint32
-	Gids        []uint32
-}
-
 func (v *Auth_unix) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Stamp)))
 	xdr.XdrString(xs, 255, (*string)(&((v).Machinename)))
@@ -204,28 +96,12 @@ func (v *Auth_unix) Xdr(xs *xdr.XdrState) {
 		}
 	}
 }
-
-const PMAP_PORT = 111
-
-type Mapping struct {
-	Prog uint32
-	Vers uint32
-	Prot uint32
-	Port uint32
-}
-
 func (v *Mapping) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Prog)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Vers)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Prot)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Port)))
 }
-
-const IPPROTO_TCP = 6
-const IPPROTO_UDP = 17
-
-type Pmaplist struct{ P *Pmaplistelem }
-
 func (v *Pmaplist) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
 		opted := (v).P != nil
@@ -243,46 +119,17 @@ func (v *Pmaplist) Xdr(xs *xdr.XdrState) {
 		}
 	}
 }
-
-type Pmaplistelem struct {
-	Map  Mapping
-	Next Pmaplist
-}
-
 func (v *Pmaplistelem) Xdr(xs *xdr.XdrState) {
 	(*Mapping)(&((v).Map)).Xdr(xs)
 	(*Pmaplist)(&((v).Next)).Xdr(xs)
 }
-
-type Call_args struct {
-	Prog uint32
-	Vers uint32
-	Proc uint32
-	Args []byte
-}
-
 func (v *Call_args) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Prog)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Vers)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Proc)))
 	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Args)))
 }
-
-type Call_result struct {
-	Port uint32
-	Res  []byte
-}
-
 func (v *Call_result) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Port)))
 	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Res)))
 }
-
-const PMAP_PROG uint32 = 100000
-const PMAP_VERS uint32 = 2
-const PMAPPROC_NULL uint32 = 0
-const PMAPPROC_SET uint32 = 1
-const PMAPPROC_UNSET uint32 = 2
-const PMAPPROC_GETPORT uint32 = 3
-const PMAPPROC_DUMP uint32 = 4
-const PMAPPROC_CALLIT uint32 = 5
