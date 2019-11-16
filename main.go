@@ -13,8 +13,11 @@ import (
 var inputFile = flag.String("i", "", "Input file (.x)")
 var outputFile = flag.String("o", "", "Output file (.go)")
 var outputPackage = flag.String("p", "main", "Output package name")
+var typesFile = flag.String("t", "", "Output file for separate type definitions (optional")
 var debugFlag = flag.Bool("d", false, "Debug parsing")
+
 var out io.Writer
+var tout io.Writer
 
 func main() {
 	flag.Parse()
@@ -47,14 +50,40 @@ func main() {
 	}
 
 	defer os.Remove(outTmp)
-
 	out = outf
+
 	fmt.Fprintf(out, "package %s\n", *outputPackage)
 	fmt.Fprintf(out, "import \"github.com/zeldovich/go-rpcgen/xdr\"\n")
+
+	var toutTmp string
+	var toutf *os.File
+	if *typesFile != "" {
+		toutTmp = *typesFile + ".tmp"
+		toutf, err = os.OpenFile(toutTmp, os.O_WRONLY|os.O_EXCL|os.O_CREATE|os.O_TRUNC, 0666)
+		if err != nil {
+			panic(err)
+		}
+
+		defer os.Remove(toutTmp)
+		tout = toutf
+
+		fmt.Fprintf(tout, "package %s\n", *outputPackage)
+	} else {
+		tout = outf
+	}
+
 	xdrParse(&l)
 	outf.Close()
+	refmt(outTmp, *outputFile)
 
-	buf, err := ioutil.ReadFile(outTmp)
+	if *typesFile != "" {
+		toutf.Close()
+		refmt(toutTmp, *typesFile)
+	}
+}
+
+func refmt(infile string, outfile string) {
+	buf, err := ioutil.ReadFile(infile)
 	if err != nil {
 		panic(err)
 	}
@@ -64,7 +93,7 @@ func main() {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile(*outputFile, buf, 0666)
+	err = ioutil.WriteFile(outfile, buf, 0666)
 	if err != nil {
 		panic(err)
 	}

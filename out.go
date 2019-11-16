@@ -370,24 +370,24 @@ type progDef struct {
 }
 
 func emitProg(d progDef) {
-	fmt.Fprintf(out, "const %s uint32 = %s\n", i(d.name), d.id)
+	fmt.Fprintf(tout, "const %s uint32 = %s\n", i(d.name), d.id)
 	for _, v := range d.vers {
-		fmt.Fprintf(out, "const %s uint32 = %s\n", i(v.name), v.id)
+		fmt.Fprintf(tout, "const %s uint32 = %s\n", i(v.name), v.id)
 
 		for _, c := range v.calls {
-			fmt.Fprintf(out, "const %s uint32 = %s\n", i(c.name), c.id)
+			fmt.Fprintf(tout, "const %s uint32 = %s\n", i(c.name), c.id)
 		}
 	}
 }
 
 func emitConst(ident string, val string) {
-	fmt.Fprintf(out, "const %s = %s\n", ident, val)
+	fmt.Fprintf(tout, "const %s = %s\n", ident, val)
 }
 
 func emitTypedef(val decl) {
 	switch v := val.(type) {
 	case declName:
-		fmt.Fprintf(out, "type %s %s\n", i(v.n), v.t.goType())
+		fmt.Fprintf(tout, "type %s %s\n", i(v.n), v.t.goType())
 
 		fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(v.n))
 		fmt.Fprintf(out, "%s", v.t.goXdr("v"))
@@ -396,26 +396,26 @@ func emitTypedef(val decl) {
 }
 
 func emitEnum(ident string, val []enumItem) {
-	fmt.Fprintf(out, "type %s int32\n", i(ident))
+	fmt.Fprintf(tout, "type %s int32\n", i(ident))
 
 	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", typeInt{false}.goXdr("v"))
 	fmt.Fprintf(out, "}\n")
 
 	for _, v := range val {
-		fmt.Fprintf(out, "const %s %s = %s\n", i(v.name), i(ident), v.val)
+		fmt.Fprintf(tout, "const %s %s = %s\n", i(v.name), i(ident), v.val)
 	}
 }
 
 func emitStruct(ident string, val []decl) {
-	fmt.Fprintf(out, "type %s struct {\n", i(ident))
+	fmt.Fprintf(tout, "type %s struct {\n", i(ident))
 	for _, v := range val {
 		switch v := v.(type) {
 		case declName:
-			fmt.Fprintf(out, "  %s %s;\n", i(v.n), v.t.goType())
+			fmt.Fprintf(tout, "  %s %s;\n", i(v.n), v.t.goType())
 		}
 	}
-	fmt.Fprintf(out, "}\n")
+	fmt.Fprintf(tout, "}\n")
 
 	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", typeStruct{val}.goXdr("v"))
@@ -423,7 +423,7 @@ func emitStruct(ident string, val []decl) {
 }
 
 func emitUnion(ident string, val typeUnion) {
-	fmt.Fprintf(out, "type %s %s\n", i(ident), val.goType())
+	fmt.Fprintf(tout, "type %s %s\n", i(ident), val.goType())
 
 	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
 	fmt.Fprintf(out, "%s", val.goXdr("v"))
