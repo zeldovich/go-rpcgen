@@ -13,14 +13,17 @@ import (
 type ProcHandler func (args *xdr.XdrState) (res xdr.Xdrable, err error)
 
 type Server struct {
-	rw       io.ReadWriter
 	handlers map[uint32]map[uint32]map[uint32]ProcHandler
+}
+
+type serverConn struct {
+	s *Server
+	rw       io.ReadWriter
 	writeMu  sync.Mutex
 }
 
-func MakeServer(rw io.ReadWriter) *Server {
+func MakeServer() *Server {
 	return &Server{
-		rw:   rw,
 		handlers: make(map[uint32]map[uint32]map[uint32]ProcHandler),
 	}
 }
@@ -39,10 +42,15 @@ func (s *Server) Register(prog, vers, proc uint32, handler ProcHandler) {
 	s.handlers[prog][vers][proc] = handler
 }
 
-func (s *Server) Run() error {
+func (s *Server) Run(rw io.ReadWriter) error {
+	sc := &serverConn{
+		s: s,
+		rw: rw,
+	}
+
 	for {
 		var hdr [4]byte
-		_, err := io.ReadFull(s.rw, hdr[:])
+		_, err := io.ReadFull(sc.rw, hdr[:])
 		if err != nil {
 			return err
 		}
@@ -53,23 +61,23 @@ func (s *Server) Run() error {
 		}
 
 		buf := make([]byte, hlen&0x7fffffff)
-		_, err = io.ReadFull(s.rw, buf)
+		_, err = io.ReadFull(sc.rw, buf)
 		if err != nil {
 			return err
 		}
 
-		go s.handleReq(buf)
+		go sc.handleReq(buf)
 	}
 }
 
-func (s *Server) handleReq(buf []byte) {
-	err := s.handleReqErr(buf)
+func (sc *serverConn) handleReq(buf []byte) {
+	err := sc.handleReqErr(buf)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 	}
 }
 
-func (s *Server) handleReqErr(buf []byte) error {
+func (sc *serverConn) handleReqErr(buf []byte) error {
 	rb := &rwBuffer{buf}
 	rd := xdr.MakeReader(rb)
 
@@ -94,7 +102,7 @@ func (s *Server) handleReqErr(buf []byte) error {
 		res.Body.Rbody.Rreply.Stat = RPC_MISMATCH
 	} else {
 		res.Body.Rbody.Stat = MSG_ACCEPTED
-		vermap, progok := s.handlers[req.Body.Cbody.Prog]
+		vermap, progok := sc.s.handlers[req.Body.Cbody.Prog]
 		if !progok {
 			res.Body.Rbody.Areply.Reply_data.Stat = PROG_UNAVAIL
 			goto reply
@@ -142,8 +150,8 @@ reply:
 	binary.BigEndian.PutUint32(hdr[:], (1<<31)|uint32(len(wb.buf)))
 	resbuf := append(hdr[:], wb.buf...)
 
-	s.writeMu.Lock()
-	defer s.writeMu.Unlock()
-	_, err = s.rw.Write(resbuf)
+	sc.writeMu.Lock()
+	defer sc.writeMu.Unlock()
+	_, err = sc.rw.Write(resbuf)
 	return err
 }

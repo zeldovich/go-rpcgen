@@ -48,12 +48,30 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	port := uint32(listener.Addr().(*net.TCPAddr).Port)
-	ok := pmap_set_unset(rfc1813.NFS_PROGRAM, rfc1813.NFS_V3, port, true)
-	if !ok {
-		panic("Could not set pmap mapping")
-	}
 
+	pmap_set_unset(rfc1813.MOUNT_PROGRAM, rfc1813.MOUNT_V3, 0, false)
+	ok := pmap_set_unset(rfc1813.MOUNT_PROGRAM, rfc1813.MOUNT_V3, port, true)
+	if !ok {
+		panic("Could not set pmap mapping for mount")
+	}
+	defer pmap_set_unset(rfc1813.MOUNT_PROGRAM, rfc1813.MOUNT_V3, port, false)
+
+	pmap_set_unset(rfc1813.NFS_PROGRAM, rfc1813.NFS_V3, 0, false)
+	ok = pmap_set_unset(rfc1813.NFS_PROGRAM, rfc1813.NFS_V3, port, true)
+	if !ok {
+		panic("Could not set pmap mapping for NFS")
+	}
 	defer pmap_set_unset(rfc1813.NFS_PROGRAM, rfc1813.NFS_V3, port, false)
+
+	srv := rfc1057.MakeServer()
+	// srv.Register(rfc1813.NFS_PROGRAM, rfc1813.NFS_V3, rfc1813....
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			panic(err)
+		}
+
+		go srv.Run(conn)
+	}
 }
