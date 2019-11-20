@@ -114,7 +114,7 @@ func (t declTypeOpaqueVarArray) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("xdr.XdrVarArray(xs, %s, (*[]byte)(%s));\n", sz, valPtr)
+	return fmt.Sprintf("xdr.XdrVarArray(xs, int(%s), (*[]byte)(%s));\n", sz, valPtr)
 }
 
 type declTypeString struct {
@@ -130,7 +130,7 @@ func (t declTypeString) goXdr(valPtr string) string {
 	if sz == "" {
 		sz = "-1"
 	}
-	return fmt.Sprintf("xdr.XdrString(xs, %s, (*string)(%s));\n", sz, valPtr)
+	return fmt.Sprintf("xdr.XdrString(xs, int(%s), (*string)(%s));\n", sz, valPtr)
 }
 
 type declTypePtr struct {
@@ -381,7 +381,7 @@ func emitProg(d progDef) {
 }
 
 func emitConst(ident string, val string) {
-	fmt.Fprintf(tout, "const %s = %s\n", ident, val)
+	fmt.Fprintf(tout, "const %s %s = %s\n", ident, *constTypeFlag, val)
 }
 
 func emitTypedef(val decl) {

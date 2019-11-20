@@ -16,6 +16,7 @@ var outputPackage = flag.String("p", "main", "Output package name")
 var typesFile = flag.String("t", "", "Output file for separate type definitions (optional")
 var debugFlag = flag.Bool("d", false, "Debug parsing")
 var unsignedEnumFlag = flag.Bool("unsigned-enum", false, "Unsigned integer enum types")
+var constTypeFlag = flag.String("const-type", "", "Optional type for const definitions")
 
 var out io.Writer
 var tout io.Writer

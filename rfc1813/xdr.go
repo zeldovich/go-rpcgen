@@ -9,10 +9,10 @@ func (v *Uint32) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Filename3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrString(xs, -1, (*string)(v))
+	xdr.XdrString(xs, int(-1), (*string)(v))
 }
 func (v *Nfspath3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrString(xs, -1, (*string)(v))
+	xdr.XdrString(xs, int(-1), (*string)(v))
 }
 func (v *Fileid3) Xdr(xs *xdr.XdrState) {
 	(*Uint64)(v).Xdr(xs)
@@ -58,7 +58,7 @@ func (v *Specdata3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(&((v).Specdata2)).Xdr(xs)
 }
 func (v *Nfs_fh3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrVarArray(xs, NFS3_FHSIZE, (*[]byte)(&((v).Data)))
+	xdr.XdrVarArray(xs, int(NFS3_FHSIZE), (*[]byte)(&((v).Data)))
 }
 func (v *Nfstime3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(&((v).Seconds)).Xdr(xs)
@@ -285,7 +285,7 @@ func (v *READ3resok) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).File_attributes)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
 	xdr.XdrBool(xs, &((v).Eof))
-	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Data)))
+	xdr.XdrVarArray(xs, int(-1), (*[]byte)(&((v).Data)))
 }
 func (v *READ3resfail) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).File_attributes)).Xdr(xs)
@@ -307,7 +307,7 @@ func (v *WRITE3args) Xdr(xs *xdr.XdrState) {
 	(*Offset3)(&((v).Offset)).Xdr(xs)
 	(*Count3)(&((v).Count)).Xdr(xs)
 	(*Stable_how)(&((v).Stable)).Xdr(xs)
-	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Data)))
+	xdr.XdrVarArray(xs, int(-1), (*[]byte)(&((v).Data)))
 }
 func (v *WRITE3resok) Xdr(xs *xdr.XdrState) {
 	(*Wcc_data)(&((v).File_wcc)).Xdr(xs)
@@ -749,13 +749,13 @@ func (v *COMMIT3res) Xdr(xs *xdr.XdrState) {
 	}
 }
 func (v *Fhandle3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrVarArray(xs, FHSIZE3, (*[]byte)(v))
+	xdr.XdrVarArray(xs, int(FHSIZE3), (*[]byte)(v))
 }
 func (v *Dirpath3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrString(xs, MNTPATHLEN3, (*string)(v))
+	xdr.XdrString(xs, int(MNTPATHLEN3), (*string)(v))
 }
 func (v *Name3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrString(xs, MNTNAMLEN3, (*string)(v))
+	xdr.XdrString(xs, int(MNTNAMLEN3), (*string)(v))
 }
 func (v *Mountstat3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(v))

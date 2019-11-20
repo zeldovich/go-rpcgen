@@ -7,7 +7,7 @@ func (v *Auth_flavor) Xdr(xs *xdr.XdrState) {
 }
 func (v *Opaque_auth) Xdr(xs *xdr.XdrState) {
 	(*Auth_flavor)(&((v).Flavor)).Xdr(xs)
-	xdr.XdrVarArray(xs, 400, (*[]byte)(&((v).Body)))
+	xdr.XdrVarArray(xs, int(400), (*[]byte)(&((v).Body)))
 }
 func (v *Msg_type) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(v))
@@ -75,7 +75,7 @@ func (v *Rejected_reply) Xdr(xs *xdr.XdrState) {
 }
 func (v *Auth_unix) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Stamp)))
-	xdr.XdrString(xs, 255, (*string)(&((v).Machinename)))
+	xdr.XdrString(xs, int(255), (*string)(&((v).Machinename)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Uid)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Gid)))
 	{
@@ -127,9 +127,9 @@ func (v *Call_args) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Prog)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Vers)))
 	xdr.XdrU32(xs, (*uint32)(&((v).Proc)))
-	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Args)))
+	xdr.XdrVarArray(xs, int(-1), (*[]byte)(&((v).Args)))
 }
 func (v *Call_result) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Port)))
-	xdr.XdrVarArray(xs, -1, (*[]byte)(&((v).Res)))
+	xdr.XdrVarArray(xs, int(-1), (*[]byte)(&((v).Res)))
 }

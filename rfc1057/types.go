@@ -90,7 +90,7 @@ type Auth_unix struct {
 	Gids        []uint32
 }
 
-const PMAP_PORT = 111
+const PMAP_PORT uint32 = 111
 
 type Mapping struct {
 	Prog uint32
@@ -99,8 +99,8 @@ type Mapping struct {
 	Port uint32
 }
 
-const IPPROTO_TCP = 6
-const IPPROTO_UDP = 17
+const IPPROTO_TCP uint32 = 6
+const IPPROTO_UDP uint32 = 17
 
 type Pmaplist struct{ P *Pmaplistelem }
 type Pmaplistelem struct {
