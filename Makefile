@@ -7,5 +7,5 @@ $(GOPATH)/bin/go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
 	go install .
 
 %/xdr.go %/types.go: %/prot.x $(GOPATH)/bin/go-rpcgen
-	$(GOPATH)/bin/go-rpcgen -i $< -o $@ -t $(@D)/types.go -p $(@D)
+	$(GOPATH)/bin/go-rpcgen -i $< -o $@ -t $(@D)/types.go -p $(@D) -unsigned-enum
 	go vet ./$(@D)

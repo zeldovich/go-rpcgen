@@ -15,6 +15,7 @@ var outputFile = flag.String("o", "", "Output file (.go)")
 var outputPackage = flag.String("p", "main", "Output package name")
 var typesFile = flag.String("t", "", "Output file for separate type definitions (optional")
 var debugFlag = flag.Bool("d", false, "Debug parsing")
+var unsignedEnumFlag = flag.Bool("unsigned-enum", false, "Unsigned integer enum types")
 
 var out io.Writer
 var tout io.Writer

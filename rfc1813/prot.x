@@ -6,9 +6,7 @@ const NFS3_CREATEVERFSIZE = 8;
 const NFS3_WRITEVERFSIZE  = 8;
 
 typedef unsigned hyper uint64;
-typedef hyper int64;
 typedef unsigned int uint32;
-typedef int int32;
 typedef string filename3<>;
 typedef string nfspath3<>;
 typedef uint64 fileid3;
@@ -811,8 +809,8 @@ program MOUNT_PROGRAM {
 } = 100005;
 
 struct mountres3_ok {
-  fhandle3   fhandle;
-  int        auth_flavors<>;
+  fhandle3     fhandle;
+  unsigned int auth_flavors<>;
 };
 
 union mountres3 switch (mountstat3 fhs_status) {

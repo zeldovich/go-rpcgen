@@ -1,6 +1,6 @@
 package rfc1057
 
-type Auth_flavor int32
+type Auth_flavor uint32
 
 const AUTH_NONE Auth_flavor = 0
 const AUTH_UNIX Auth_flavor = 1
@@ -11,17 +11,17 @@ type Opaque_auth struct {
 	Flavor Auth_flavor
 	Body   []byte
 }
-type Msg_type int32
+type Msg_type uint32
 
 const CALL Msg_type = 0
 const REPLY Msg_type = 1
 
-type Reply_stat int32
+type Reply_stat uint32
 
 const MSG_ACCEPTED Reply_stat = 0
 const MSG_DENIED Reply_stat = 1
 
-type Accept_stat int32
+type Accept_stat uint32
 
 const SUCCESS Accept_stat = 0
 const PROG_UNAVAIL Accept_stat = 1
@@ -29,12 +29,12 @@ const PROG_MISMATCH Accept_stat = 2
 const PROC_UNAVAIL Accept_stat = 3
 const GARBAGE_ARGS Accept_stat = 4
 
-type Reject_stat int32
+type Reject_stat uint32
 
 const RPC_MISMATCH Reject_stat = 0
 const AUTH_ERROR Reject_stat = 1
 
-type Auth_stat int32
+type Auth_stat uint32
 
 const AUTH_BADCRED Auth_stat = 1
 const AUTH_REJECTEDCRED Auth_stat = 2

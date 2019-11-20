@@ -5,14 +5,8 @@ import "github.com/zeldovich/go-rpcgen/xdr"
 func (v *Uint64) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU64(xs, (*uint64)(v))
 }
-func (v *Int64) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS64(xs, (*int64)(v))
-}
 func (v *Uint32) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(v))
-}
-func (v *Int32) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
 }
 func (v *Filename3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrString(xs, -1, (*string)(v))
@@ -54,10 +48,10 @@ func (v *Count3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(v).Xdr(xs)
 }
 func (v *Nfsstat3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Ftype3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Specdata3) Xdr(xs *xdr.XdrState) {
 	(*Uint32)(&((v).Specdata1)).Xdr(xs)
@@ -119,7 +113,7 @@ func (v *Post_op_fh3) Xdr(xs *xdr.XdrState) {
 	}
 }
 func (v *Time_how) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Set_mode3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrBool(xs, &((v).Set_it))
@@ -306,7 +300,7 @@ func (v *READ3res) Xdr(xs *xdr.XdrState) {
 	}
 }
 func (v *Stable_how) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *WRITE3args) Xdr(xs *xdr.XdrState) {
 	(*Nfs_fh3)(&((v).File)).Xdr(xs)
@@ -334,7 +328,7 @@ func (v *WRITE3res) Xdr(xs *xdr.XdrState) {
 	}
 }
 func (v *Createmode3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Createhow3) Xdr(xs *xdr.XdrState) {
 	(*Createmode3)(&((v).Mode)).Xdr(xs)
@@ -764,7 +758,7 @@ func (v *Name3) Xdr(xs *xdr.XdrState) {
 	xdr.XdrString(xs, MNTNAMLEN3, (*string)(v))
 }
 func (v *Mountstat3) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Mountres3_ok) Xdr(xs *xdr.XdrState) {
 	(*Fhandle3)(&((v).Fhandle)).Xdr(xs)
@@ -774,10 +768,10 @@ func (v *Mountres3_ok) Xdr(xs *xdr.XdrState) {
 		xdr.XdrU32(xs, (*uint32)(&__arraysz))
 
 		if xs.Decoding() {
-			*&((v).Auth_flavors) = make([]int32, __arraysz)
+			*&((v).Auth_flavors) = make([]uint32, __arraysz)
 		}
 		for i := uint64(0); i < uint64(__arraysz); i++ {
-			xdr.XdrS32(xs, (*int32)(&((*(&((v).Auth_flavors)))[i])))
+			xdr.XdrU32(xs, (*uint32)(&((*(&((v).Auth_flavors)))[i])))
 
 		}
 	}

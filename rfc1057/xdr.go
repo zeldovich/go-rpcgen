@@ -3,26 +3,26 @@ package rfc1057
 import "github.com/zeldovich/go-rpcgen/xdr"
 
 func (v *Auth_flavor) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Opaque_auth) Xdr(xs *xdr.XdrState) {
 	(*Auth_flavor)(&((v).Flavor)).Xdr(xs)
 	xdr.XdrVarArray(xs, 400, (*[]byte)(&((v).Body)))
 }
 func (v *Msg_type) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Reply_stat) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Accept_stat) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Reject_stat) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Auth_stat) Xdr(xs *xdr.XdrState) {
-	xdr.XdrS32(xs, (*int32)(v))
+	xdr.XdrU32(xs, (*uint32)(v))
 }
 func (v *Rpc_msg) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Xid)))

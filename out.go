@@ -396,10 +396,15 @@ func emitTypedef(val decl) {
 }
 
 func emitEnum(ident string, val []enumItem) {
-	fmt.Fprintf(tout, "type %s int32\n", i(ident))
+	t := "int32"
+	if *unsignedEnumFlag {
+		t = "uint32"
+	}
+
+	fmt.Fprintf(tout, "type %s %s\n", i(ident), t)
 
 	fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(ident))
-	fmt.Fprintf(out, "%s", typeInt{false}.goXdr("v"))
+	fmt.Fprintf(out, "%s", typeInt{*unsignedEnumFlag}.goXdr("v"))
 	fmt.Fprintf(out, "}\n")
 
 	for _, v := range val {
