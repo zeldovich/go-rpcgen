@@ -104,18 +104,18 @@ func (v *Mapping) Xdr(xs *xdr.XdrState) {
 }
 func (v *Pmaplist) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
-		opted := (v).P != nil
+		opted := *(&v.P) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Pmaplistelem)((v).P).Xdr(xs)
+			(*Pmaplistelem)(*(&v.P)).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(v).P = new(Pmaplistelem)
-			(*Pmaplistelem)((v).P).Xdr(xs)
+			*(&v.P) = new(Pmaplistelem)
+			(*Pmaplistelem)(*(&v.P)).Xdr(xs)
 		}
 	}
 }

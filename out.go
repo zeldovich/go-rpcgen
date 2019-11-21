@@ -138,16 +138,16 @@ type declTypePtr struct {
 }
 
 func (t declTypePtr) goType() string {
-	return fmt.Sprintf("struct { P *%s }", t.t.goType())
+	return fmt.Sprintf("*%s", t.t.goType())
 }
 
 func (t declTypePtr) goXdr(valPtr string) string {
 	var res string
 	res += fmt.Sprintf("if xs.Encoding() {\n")
-	res += fmt.Sprintf("opted := (%s).P != nil\n", valPtr)
+	res += fmt.Sprintf("opted := *(%s) != nil\n", valPtr)
 	res += typeBool{}.goXdr("&opted")
 	res += fmt.Sprintf("if opted {\n")
-	res += t.t.goXdr(fmt.Sprintf("(%s).P", valPtr))
+	res += t.t.goXdr(fmt.Sprintf("*(%s)", valPtr))
 	res += fmt.Sprintf("}\n")
 	res += fmt.Sprintf("}\n")
 
@@ -155,8 +155,8 @@ func (t declTypePtr) goXdr(valPtr string) string {
 	res += fmt.Sprintf("var opted bool\n")
 	res += typeBool{}.goXdr("&opted")
 	res += fmt.Sprintf("if opted {\n")
-	res += fmt.Sprintf("(%s).P = new(%s)\n", valPtr, t.t.goType())
-	res += t.t.goXdr(fmt.Sprintf("(%s).P", valPtr))
+	res += fmt.Sprintf("*(%s) = new(%s)\n", valPtr, t.t.goType())
+	res += t.t.goXdr(fmt.Sprintf("*(%s)", valPtr))
 	res += fmt.Sprintf("}\n")
 	res += fmt.Sprintf("}\n")
 	return res
@@ -387,10 +387,21 @@ func emitConst(ident string, val string) {
 func emitTypedef(val decl) {
 	switch v := val.(type) {
 	case declName:
-		fmt.Fprintf(tout, "type %s %s\n", i(v.n), v.t.goType())
+		// Pointers get wrapped in an extra level of struct at
+		// the top level, so that we can define a pointer receiver
+		// on them.
+		goType := v.t.goType()
+		goRef := "v"
+		switch v.t.(type) {
+		case declTypePtr:
+			goType = fmt.Sprintf("struct { P %s }", goType)
+			goRef = "&v.P"
+		}
+
+		fmt.Fprintf(tout, "type %s %s\n", i(v.n), goType)
 
 		fmt.Fprintf(out, "func (v *%s) Xdr(xs *xdr.XdrState) {\n", i(v.n))
-		fmt.Fprintf(out, "%s", v.t.goXdr("v"))
+		fmt.Fprintf(out, "%s", v.t.goXdr(goRef))
 		fmt.Fprintf(out, "}\n")
 	}
 }

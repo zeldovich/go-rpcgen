@@ -536,35 +536,35 @@ func (v *Entry3) Xdr(xs *xdr.XdrState) {
 	(*Filename3)(&((v).Name)).Xdr(xs)
 	(*Cookie3)(&((v).Cookie)).Xdr(xs)
 	if xs.Encoding() {
-		opted := (&((v).Nextentry)).P != nil
+		opted := *(&((v).Nextentry)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
+			(*Entry3)(*(&((v).Nextentry))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Nextentry)).P = new(Entry3)
-			(*Entry3)((&((v).Nextentry)).P).Xdr(xs)
+			*(&((v).Nextentry)) = new(Entry3)
+			(*Entry3)(*(&((v).Nextentry))).Xdr(xs)
 		}
 	}
 }
 func (v *Dirlist3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
-		opted := (&((v).Entries)).P != nil
+		opted := *(&((v).Entries)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Entry3)((&((v).Entries)).P).Xdr(xs)
+			(*Entry3)(*(&((v).Entries))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Entries)).P = new(Entry3)
-			(*Entry3)((&((v).Entries)).P).Xdr(xs)
+			*(&((v).Entries)) = new(Entry3)
+			(*Entry3)(*(&((v).Entries))).Xdr(xs)
 		}
 	}
 	xdr.XdrBool(xs, &((v).Eof))
@@ -600,35 +600,35 @@ func (v *Entryplus3) Xdr(xs *xdr.XdrState) {
 	(*Post_op_attr)(&((v).Name_attributes)).Xdr(xs)
 	(*Post_op_fh3)(&((v).Name_handle)).Xdr(xs)
 	if xs.Encoding() {
-		opted := (&((v).Nextentry)).P != nil
+		opted := *(&((v).Nextentry)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
+			(*Entryplus3)(*(&((v).Nextentry))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Nextentry)).P = new(Entryplus3)
-			(*Entryplus3)((&((v).Nextentry)).P).Xdr(xs)
+			*(&((v).Nextentry)) = new(Entryplus3)
+			(*Entryplus3)(*(&((v).Nextentry))).Xdr(xs)
 		}
 	}
 }
 func (v *Dirlistplus3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
-		opted := (&((v).Entries)).P != nil
+		opted := *(&((v).Entries)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
+			(*Entryplus3)(*(&((v).Entries))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Entries)).P = new(Entryplus3)
-			(*Entryplus3)((&((v).Entries)).P).Xdr(xs)
+			*(&((v).Entries)) = new(Entryplus3)
+			(*Entryplus3)(*(&((v).Entries))).Xdr(xs)
 		}
 	}
 	xdr.XdrBool(xs, &((v).Eof))
@@ -788,103 +788,103 @@ func (v *Mount3) Xdr(xs *xdr.XdrState) {
 	(*Name3)(&((v).Ml_hostname)).Xdr(xs)
 	(*Dirpath3)(&((v).Ml_directory)).Xdr(xs)
 	if xs.Encoding() {
-		opted := (&((v).Ml_next)).P != nil
+		opted := *(&((v).Ml_next)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
+			(*Mount3)(*(&((v).Ml_next))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Ml_next)).P = new(Mount3)
-			(*Mount3)((&((v).Ml_next)).P).Xdr(xs)
+			*(&((v).Ml_next)) = new(Mount3)
+			(*Mount3)(*(&((v).Ml_next))).Xdr(xs)
 		}
 	}
 }
 func (v *Mountopt3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
-		opted := (v).P != nil
+		opted := *(&v.P) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Mount3)((v).P).Xdr(xs)
+			(*Mount3)(*(&v.P)).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(v).P = new(Mount3)
-			(*Mount3)((v).P).Xdr(xs)
+			*(&v.P) = new(Mount3)
+			(*Mount3)(*(&v.P)).Xdr(xs)
 		}
 	}
 }
 func (v *Groups3) Xdr(xs *xdr.XdrState) {
 	(*Name3)(&((v).Gr_name)).Xdr(xs)
 	if xs.Encoding() {
-		opted := (&((v).Gr_next)).P != nil
+		opted := *(&((v).Gr_next)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
+			(*Groups3)(*(&((v).Gr_next))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Gr_next)).P = new(Groups3)
-			(*Groups3)((&((v).Gr_next)).P).Xdr(xs)
+			*(&((v).Gr_next)) = new(Groups3)
+			(*Groups3)(*(&((v).Gr_next))).Xdr(xs)
 		}
 	}
 }
 func (v *Exports3) Xdr(xs *xdr.XdrState) {
 	(*Dirpath3)(&((v).Ex_dir)).Xdr(xs)
 	if xs.Encoding() {
-		opted := (&((v).Ex_groups)).P != nil
+		opted := *(&((v).Ex_groups)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
+			(*Groups3)(*(&((v).Ex_groups))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Ex_groups)).P = new(Groups3)
-			(*Groups3)((&((v).Ex_groups)).P).Xdr(xs)
+			*(&((v).Ex_groups)) = new(Groups3)
+			(*Groups3)(*(&((v).Ex_groups))).Xdr(xs)
 		}
 	}
 	if xs.Encoding() {
-		opted := (&((v).Ex_next)).P != nil
+		opted := *(&((v).Ex_next)) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
+			(*Exports3)(*(&((v).Ex_next))).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(&((v).Ex_next)).P = new(Exports3)
-			(*Exports3)((&((v).Ex_next)).P).Xdr(xs)
+			*(&((v).Ex_next)) = new(Exports3)
+			(*Exports3)(*(&((v).Ex_next))).Xdr(xs)
 		}
 	}
 }
 func (v *Exportsopt3) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
-		opted := (v).P != nil
+		opted := *(&v.P) != nil
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(*Exports3)((v).P).Xdr(xs)
+			(*Exports3)(*(&v.P)).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
 		xdr.XdrBool(xs, &opted)
 		if opted {
-			(v).P = new(Exports3)
-			(*Exports3)((v).P).Xdr(xs)
+			*(&v.P) = new(Exports3)
+			(*Exports3)(*(&v.P)).Xdr(xs)
 		}
 	}
 }
