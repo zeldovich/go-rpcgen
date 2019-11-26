@@ -139,3 +139,111 @@ func (v *Uint32) Xdr(xs *xdr.XdrState) {
 func (v *Xbool) Xdr(xs *xdr.XdrState) {
 	xdr.XdrBool(xs, (*bool)(v))
 }
+
+type PMAP_PROG_PMAP_VERS_handler interface {
+	PMAPPROC_NULL()
+	PMAPPROC_SET(Mapping) Xbool
+	PMAPPROC_UNSET(Mapping) Xbool
+	PMAPPROC_GETPORT(Mapping) Uint32
+	PMAPPROC_DUMP() Pmaplist
+	PMAPPROC_CALLIT(Call_args) Call_result
+}
+type PMAP_PROG_PMAP_VERS_handler_wrapper struct {
+	h PMAP_PROG_PMAP_VERS_handler
+}
+
+func (w *PMAP_PROG_PMAP_VERS_handler_wrapper) PMAPPROC_NULL(args *xdr.XdrState) (res xdr.Xdrable, err error) {
+	var out xdr.Void
+	w.h.PMAPPROC_NULL()
+	return &out, nil
+}
+func (w *PMAP_PROG_PMAP_VERS_handler_wrapper) PMAPPROC_SET(args *xdr.XdrState) (res xdr.Xdrable, err error) {
+	var in Mapping
+	in.Xdr(args)
+	err = args.Error()
+	if err != nil {
+		return
+	}
+	var out Xbool
+	out = w.h.PMAPPROC_SET(in)
+	return &out, nil
+}
+func (w *PMAP_PROG_PMAP_VERS_handler_wrapper) PMAPPROC_UNSET(args *xdr.XdrState) (res xdr.Xdrable, err error) {
+	var in Mapping
+	in.Xdr(args)
+	err = args.Error()
+	if err != nil {
+		return
+	}
+	var out Xbool
+	out = w.h.PMAPPROC_UNSET(in)
+	return &out, nil
+}
+func (w *PMAP_PROG_PMAP_VERS_handler_wrapper) PMAPPROC_GETPORT(args *xdr.XdrState) (res xdr.Xdrable, err error) {
+	var in Mapping
+	in.Xdr(args)
+	err = args.Error()
+	if err != nil {
+		return
+	}
+	var out Uint32
+	out = w.h.PMAPPROC_GETPORT(in)
+	return &out, nil
+}
+func (w *PMAP_PROG_PMAP_VERS_handler_wrapper) PMAPPROC_DUMP(args *xdr.XdrState) (res xdr.Xdrable, err error) {
+	var out Pmaplist
+	out = w.h.PMAPPROC_DUMP()
+	return &out, nil
+}
+func (w *PMAP_PROG_PMAP_VERS_handler_wrapper) PMAPPROC_CALLIT(args *xdr.XdrState) (res xdr.Xdrable, err error) {
+	var in Call_args
+	in.Xdr(args)
+	err = args.Error()
+	if err != nil {
+		return
+	}
+	var out Call_result
+	out = w.h.PMAPPROC_CALLIT(in)
+	return &out, nil
+}
+func PMAP_PROG_PMAP_VERS_regs(h PMAP_PROG_PMAP_VERS_handler) []xdr.ProcRegistration {
+	w := &PMAP_PROG_PMAP_VERS_handler_wrapper{h}
+	return []xdr.ProcRegistration{
+		xdr.ProcRegistration{
+			Prog:    PMAP_PROG,
+			Vers:    PMAP_VERS,
+			Proc:    PMAPPROC_NULL,
+			Handler: w.PMAPPROC_NULL,
+		},
+		xdr.ProcRegistration{
+			Prog:    PMAP_PROG,
+			Vers:    PMAP_VERS,
+			Proc:    PMAPPROC_SET,
+			Handler: w.PMAPPROC_SET,
+		},
+		xdr.ProcRegistration{
+			Prog:    PMAP_PROG,
+			Vers:    PMAP_VERS,
+			Proc:    PMAPPROC_UNSET,
+			Handler: w.PMAPPROC_UNSET,
+		},
+		xdr.ProcRegistration{
+			Prog:    PMAP_PROG,
+			Vers:    PMAP_VERS,
+			Proc:    PMAPPROC_GETPORT,
+			Handler: w.PMAPPROC_GETPORT,
+		},
+		xdr.ProcRegistration{
+			Prog:    PMAP_PROG,
+			Vers:    PMAP_VERS,
+			Proc:    PMAPPROC_DUMP,
+			Handler: w.PMAPPROC_DUMP,
+		},
+		xdr.ProcRegistration{
+			Prog:    PMAP_PROG,
+			Vers:    PMAP_VERS,
+			Proc:    PMAPPROC_CALLIT,
+			Handler: w.PMAPPROC_CALLIT,
+		},
+	}
+}

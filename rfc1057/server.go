@@ -10,16 +10,16 @@ import (
 	"github.com/zeldovich/go-rpcgen/xdr"
 )
 
-type ProcHandler func (args *xdr.XdrState) (res xdr.Xdrable, err error)
+type ProcHandler func(args *xdr.XdrState) (res xdr.Xdrable, err error)
 
 type Server struct {
 	handlers map[uint32]map[uint32]map[uint32]ProcHandler
 }
 
 type serverConn struct {
-	s *Server
-	rw       io.ReadWriter
-	writeMu  sync.Mutex
+	s       *Server
+	rw      io.ReadWriter
+	writeMu sync.Mutex
 }
 
 func MakeServer() *Server {
@@ -42,9 +42,15 @@ func (s *Server) Register(prog, vers, proc uint32, handler ProcHandler) {
 	s.handlers[prog][vers][proc] = handler
 }
 
+func (s *Server) RegisterMany(regs []xdr.ProcRegistration) {
+	for _, r := range regs {
+		s.Register(r.Prog, r.Vers, r.Proc, r.Handler)
+	}
+}
+
 func (s *Server) Run(rw io.ReadWriter) error {
 	sc := &serverConn{
-		s: s,
+		s:  s,
 		rw: rw,
 	}
 

@@ -172,6 +172,14 @@ type typespecOpt struct {
 	t      typespec
 }
 
+func (t typespecOpt) maybeGoType() string {
+	if t.isVoid {
+		return ""
+	}
+
+	return t.t.goType()
+}
+
 type typeInt struct {
 	unsig bool
 }
@@ -377,6 +385,59 @@ func emitProg(d progDef) {
 		for _, c := range v.calls {
 			fmt.Fprintf(tout, "const %s uint32 = %s\n", i(c.name), c.id)
 		}
+
+		fmt.Fprintf(out, "type %s_%s_handler interface {\n", i(d.name), i(v.name))
+		for _, c := range v.calls {
+			fmt.Fprintf(out, "%s(%s) %s\n", i(c.name), c.arg.maybeGoType(), c.res.maybeGoType())
+		}
+		fmt.Fprintf(out, "}\n")
+
+		fmt.Fprintf(out, "type %s_%s_handler_wrapper struct {\n", i(d.name), i(v.name))
+		fmt.Fprintf(out, "h %s_%s_handler\n", i(d.name), i(v.name))
+		fmt.Fprintf(out, "}\n")
+
+		for _, c := range v.calls {
+			fmt.Fprintf(out, "func (w *%s_%s_handler_wrapper) %s(args *xdr.XdrState) (res xdr.Xdrable, err error) {\n",
+				i(d.name), i(v.name), i(c.name))
+			if !c.arg.isVoid {
+				fmt.Fprintf(out, "var in %s\n", c.arg.t.goType())
+				fmt.Fprintf(out, "in.Xdr(args)\n")
+				fmt.Fprintf(out, "err = args.Error()\n")
+				fmt.Fprintf(out, "if err != nil { return }\n")
+			}
+
+			if !c.res.isVoid {
+				fmt.Fprintf(out, "var out %s\n", c.res.t.goType())
+			} else {
+				fmt.Fprintf(out, "var out xdr.Void\n")
+			}
+
+			if !c.res.isVoid {
+				fmt.Fprintf(out, "out = ")
+			}
+			fmt.Fprintf(out, "w.h.%s(", i(c.name))
+			if !c.arg.isVoid {
+				fmt.Fprintf(out, "in")
+			}
+			fmt.Fprintf(out, ")\n")
+
+			fmt.Fprintf(out, "return &out, nil")
+			fmt.Fprintf(out, "}\n")
+		}
+
+		fmt.Fprintf(out, "func %s_%s_regs(h %s_%s_handler) []xdr.ProcRegistration {\n", i(d.name), i(v.name), i(d.name), i(v.name))
+		fmt.Fprintf(out, "w := &%s_%s_handler_wrapper{h}\n", i(d.name), i(v.name))
+		fmt.Fprintf(out, "return []xdr.ProcRegistration{\n")
+		for _, c := range v.calls {
+			fmt.Fprintf(out, "xdr.ProcRegistration{\n")
+			fmt.Fprintf(out, "Prog: %s,\n", i(d.name))
+			fmt.Fprintf(out, "Vers: %s,\n", i(v.name))
+			fmt.Fprintf(out, "Proc: %s,\n", i(c.name))
+			fmt.Fprintf(out, "Handler: w.%s,\n", i(c.name))
+			fmt.Fprintf(out, "},\n")
+		}
+		fmt.Fprintf(out, "}\n")
+		fmt.Fprintf(out, "}\n")
 	}
 }
 

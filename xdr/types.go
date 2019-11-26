@@ -20,3 +20,10 @@ func (v *Int32) Xdr(xs *XdrState)  { XdrS32(xs, (*int32)(v)) }
 func (v *Uint64) Xdr(xs *XdrState) { XdrU64(xs, (*uint64)(v)) }
 func (v *Int64) Xdr(xs *XdrState)  { XdrS64(xs, (*int64)(v)) }
 func (v *Void) Xdr(xs *XdrState)   {}
+
+type ProcRegistration struct {
+	Prog    uint32
+	Vers    uint32
+	Proc    uint32
+	Handler func(args *XdrState) (res Xdrable, err error)
+}
