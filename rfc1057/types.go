@@ -117,6 +117,8 @@ type Call_result struct {
 	Port uint32
 	Res  []byte
 }
+type Uint32 uint32
+type Xbool bool
 
 const PMAP_PROG uint32 = 100000
 const PMAP_VERS uint32 = 2

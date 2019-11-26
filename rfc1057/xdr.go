@@ -105,14 +105,14 @@ func (v *Mapping) Xdr(xs *xdr.XdrState) {
 func (v *Pmaplist) Xdr(xs *xdr.XdrState) {
 	if xs.Encoding() {
 		opted := *(&v.P) != nil
-		xdr.XdrBool(xs, &opted)
+		xdr.XdrBool(xs, (*bool)(&opted))
 		if opted {
 			(*Pmaplistelem)(*(&v.P)).Xdr(xs)
 		}
 	}
 	if xs.Decoding() {
 		var opted bool
-		xdr.XdrBool(xs, &opted)
+		xdr.XdrBool(xs, (*bool)(&opted))
 		if opted {
 			*(&v.P) = new(Pmaplistelem)
 			(*Pmaplistelem)(*(&v.P)).Xdr(xs)
@@ -132,4 +132,10 @@ func (v *Call_args) Xdr(xs *xdr.XdrState) {
 func (v *Call_result) Xdr(xs *xdr.XdrState) {
 	xdr.XdrU32(xs, (*uint32)(&((v).Port)))
 	xdr.XdrVarArray(xs, int(-1), (*[]byte)(&((v).Res)))
+}
+func (v *Uint32) Xdr(xs *xdr.XdrState) {
+	xdr.XdrU32(xs, (*uint32)(v))
+}
+func (v *Xbool) Xdr(xs *xdr.XdrState) {
+	xdr.XdrBool(xs, (*bool)(v))
 }

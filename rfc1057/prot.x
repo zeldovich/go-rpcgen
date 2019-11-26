@@ -138,12 +138,15 @@ struct call_result {
    opaque res<>;
 };
 
+typedef unsigned int uint32;
+typedef bool xbool;
+
 program PMAP_PROG {
    version PMAP_VERS {
       void PMAPPROC_NULL(void)                = 0;
-      bool PMAPPROC_SET(mapping)              = 1;
-      bool PMAPPROC_UNSET(mapping)            = 2;
-      unsigned int PMAPPROC_GETPORT(mapping)  = 3;
+      xbool PMAPPROC_SET(mapping)             = 1;
+      xbool PMAPPROC_UNSET(mapping)           = 2;
+      uint32 PMAPPROC_GETPORT(mapping)        = 3;
       pmaplist PMAPPROC_DUMP(void)            = 4;
       call_result PMAPPROC_CALLIT(call_args)  = 5;
    } = 2;

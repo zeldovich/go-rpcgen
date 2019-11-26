@@ -231,7 +231,7 @@ type typeBool struct{}
 
 func (t typeBool) goType() string { return "bool" }
 func (t typeBool) goXdr(valPtr string) string {
-	return fmt.Sprintf("xdr.XdrBool(xs, %s);\n", valPtr)
+	return fmt.Sprintf("xdr.XdrBool(xs, (*bool)(%s));\n", valPtr)
 }
 
 type typeEnum struct {
