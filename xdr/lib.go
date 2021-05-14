@@ -88,6 +88,20 @@ func xdrRW(xs *XdrState, v []byte) {
 	}
 }
 
+func xdrR(xs *XdrState, n int) []byte {
+	if len(xs.buf) < n {
+		xs.err = fmt.Errorf("Not enough bytes: wanted %d, have %d", n, len(xs.buf))
+	}
+
+	if xs.err != nil {
+		return nil
+	}
+
+	res := xs.buf[:n:n]
+	xs.buf = xs.buf[n:]
+	return res
+}
+
 func XdrBool(xs *XdrState, v *bool) {
 	if xs.err != nil {
 		return
@@ -188,6 +202,7 @@ func XdrVarArray(xs *XdrState, maxlen int, v *[]byte) {
 		var szbuf [4]byte
 		binary.BigEndian.PutUint32(szbuf[:], uint32(len(*v)))
 		xdrRW(xs, szbuf[:])
+		xdrRW(xs, *v)
 	} else {
 		var szbuf [4]byte
 		xdrRW(xs, szbuf[:])
@@ -199,10 +214,9 @@ func XdrVarArray(xs *XdrState, maxlen int, v *[]byte) {
 			return
 		}
 
-		*v = make([]byte, sz)
+		*v = xdrR(xs, sz)
 	}
 
-	xdrRW(xs, *v)
 	if len(*v)%4 != 0 {
 		xdrRW(xs, make([]byte, (4-len(*v)%4)%4))
 	}
