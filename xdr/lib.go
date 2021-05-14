@@ -200,7 +200,9 @@ func XdrVarArray(xs *XdrState, maxlen int, v *[]byte) {
 	}
 
 	xdrRW(xs, *v)
-	xdrRW(xs, make([]byte, (4-len(*v)%4)%4))
+	if len(*v)%4 != 0 {
+		xdrRW(xs, make([]byte, (4-len(*v)%4)%4))
+	}
 }
 
 func XdrArray(xs *XdrState, v []byte) {
