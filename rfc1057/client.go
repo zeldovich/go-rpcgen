@@ -37,7 +37,7 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 	req.Body.Cbody.Cred = cred
 	req.Body.Cbody.Verf = verf
 
-	wb := &rwBuffer{}
+	wb := &writeBuffer{}
 	wr := xdr.MakeWriter(wb)
 	req.Xdr(wr)
 	err := wr.Error()
@@ -74,7 +74,7 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 		return err
 	}
 
-	rb := &rwBuffer{buf}
+	rb := &readBuffer{buf}
 	rd := xdr.MakeReader(rb)
 	var res Rpc_msg
 	res.Xdr(rd)

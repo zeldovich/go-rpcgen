@@ -84,7 +84,7 @@ func (sc *serverConn) handleReq(buf []byte) {
 }
 
 func (sc *serverConn) handleReqErr(buf []byte) error {
-	rb := &rwBuffer{buf}
+	rb := &readBuffer{buf}
 	rd := xdr.MakeReader(rb)
 
 	var req Rpc_msg
@@ -136,7 +136,7 @@ func (sc *serverConn) handleReqErr(buf []byte) error {
 	}
 
 reply:
-	wb := &rwBuffer{}
+	wb := &writeBuffer{}
 
 	// Reserve 4 bytes at the front for the length
 	var reserveLen [4]byte
