@@ -3,7 +3,7 @@ package xdr
 import (
 	"encoding/binary"
 	"errors"
-	"io"
+	"fmt"
 	"math"
 )
 
@@ -11,27 +11,31 @@ type XdrState struct {
 	// err != nil means error state
 	err error
 
-	// reader != nil means we are reading
-	reader io.Reader
+	// reader means we are reading; otherwise writing
+	reader bool
 
-	// writer != nil means we are writing
-	writer io.Writer
+	// buf has the data to be read (or already written)
+	buf []byte
 }
 
-func MakeReader(r io.Reader) *XdrState {
+func MakeReader(buf []byte) *XdrState {
 	return &XdrState{
 		err:    nil,
-		reader: r,
-		writer: nil,
+		reader: true,
+		buf:    buf,
 	}
 }
 
-func MakeWriter(w io.Writer) *XdrState {
+func MakeWriter(buf []byte) *XdrState {
 	return &XdrState{
 		err:    nil,
-		reader: nil,
-		writer: w,
+		reader: false,
+		buf:    buf,
 	}
+}
+
+func (xs *XdrState) WriteBuf() []byte {
+	return xs.buf
 }
 
 func (xs *XdrState) EncodingSetSize(arraysz *uint32, len int) {
@@ -39,7 +43,7 @@ func (xs *XdrState) EncodingSetSize(arraysz *uint32, len int) {
 		return
 	}
 
-	if xs.writer == nil {
+	if xs.reader {
 		return
 	}
 
@@ -52,11 +56,11 @@ func (xs *XdrState) EncodingSetSize(arraysz *uint32, len int) {
 }
 
 func (xs *XdrState) Encoding() bool {
-	return xs.err == nil && xs.writer != nil
+	return xs.err == nil && xs.reader == false
 }
 
 func (xs *XdrState) Decoding() bool {
-	return xs.err == nil && xs.reader != nil
+	return xs.err == nil && xs.reader == true
 }
 
 func (xs *XdrState) SetError(s string) {
@@ -72,16 +76,15 @@ func xdrRW(xs *XdrState, v []byte) {
 		return
 	}
 
-	if xs.reader != nil {
-		_, err := io.ReadFull(xs.reader, v)
-		if err != nil {
-			xs.err = err
+	if xs.reader {
+		n := copy(v, xs.buf)
+		xs.buf = xs.buf[n:]
+
+		if len(v) < n {
+			xs.err = fmt.Errorf("Not enough bytes: wanted %d, got %d", len(v), n)
 		}
 	} else {
-		_, err := xs.writer.Write(v)
-		if err != nil {
-			xs.err = err
-		}
+		xs.buf = append(xs.buf, v...)
 	}
 }
 

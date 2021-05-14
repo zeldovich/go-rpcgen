@@ -37,8 +37,7 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 	req.Body.Cbody.Cred = cred
 	req.Body.Cbody.Verf = verf
 
-	wb := &writeBuffer{}
-	wr := xdr.MakeWriter(wb)
+	wr := xdr.MakeWriter(nil)
 	req.Xdr(wr)
 	err := wr.Error()
 	if err != nil {
@@ -51,9 +50,10 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 		return err
 	}
 
+	wbuf := wr.WriteBuf()
 	var hdr [4]byte
-	binary.BigEndian.PutUint32(hdr[:], (1<<31)|uint32(len(wb.buf)))
-	_, err = c.rw.Write(append(hdr[:], wb.buf...))
+	binary.BigEndian.PutUint32(hdr[:], (1<<31)|uint32(len(wbuf)))
+	_, err = c.rw.Write(append(hdr[:], wbuf...))
 	if err != nil {
 		return err
 	}
@@ -74,8 +74,7 @@ func (c *Client) Call(proc uint32, cred, verf Opaque_auth, args xdr.Xdrable, res
 		return err
 	}
 
-	rb := &readBuffer{buf}
-	rd := xdr.MakeReader(rb)
+	rd := xdr.MakeReader(buf)
 	var res Rpc_msg
 	res.Xdr(rd)
 	err = rd.Error()

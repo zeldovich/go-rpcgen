@@ -106,8 +106,7 @@ func (sc *serverConn) handleReq(buf []byte) {
 }
 
 func (sc *serverConn) handleReqErr(buf []byte) error {
-	rb := &readBuffer{buf}
-	rd := xdr.MakeReader(rb)
+	rd := xdr.MakeReader(buf)
 
 	var req Rpc_msg
 	req.Xdr(rd)
@@ -158,13 +157,10 @@ func (sc *serverConn) handleReqErr(buf []byte) error {
 	}
 
 reply:
-	wb := &writeBuffer{}
-
 	// Reserve 4 bytes at the front for the length
 	var reserveLen [4]byte
-	wb.Write(reserveLen[:])
 
-	wr := xdr.MakeWriter(wb)
+	wr := xdr.MakeWriter(reserveLen[:])
 	res.Xdr(wr)
 	err = wr.Error()
 	if err != nil {
@@ -179,10 +175,11 @@ reply:
 		}
 	}
 
-	binary.BigEndian.PutUint32(wb.buf[0:4], (1<<31)|uint32(len(wb.buf)-4))
+	wbuf := wr.WriteBuf()
+	binary.BigEndian.PutUint32(wbuf[0:4], (1<<31)|uint32(len(wbuf)-4))
 
 	sc.writeMu.Lock()
 	defer sc.writeMu.Unlock()
-	_, err = sc.rw.Write(wb.buf)
+	_, err = sc.rw.Write(wbuf)
 	return err
 }
