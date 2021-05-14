@@ -10,6 +10,25 @@ import (
 	"github.com/zeldovich/go-rpcgen/xdr"
 )
 
+// reqBufPool holds temporary byte slice buffers used for incoming requests.
+var reqBufPool sync.Pool
+
+func getReqBuf(buflen int) []byte {
+	bufi := reqBufPool.Get()
+	if bufi != nil {
+		buf := bufi.([]byte)
+		if buflen <= cap(buf) {
+			return buf[:buflen]
+		}
+	}
+
+	return make([]byte, buflen)
+}
+
+func putReqBuf(s []byte) {
+	reqBufPool.Put(s)
+}
+
 type ProcHandler func(args *xdr.XdrState) (res xdr.Xdrable, err error)
 
 type Server struct {
@@ -66,7 +85,8 @@ func (s *Server) Run(rw io.ReadWriter) error {
 			return fmt.Errorf("fragments not supported")
 		}
 
-		buf := make([]byte, hlen&0x7fffffff)
+		buflen := int(hlen & 0x7fffffff)
+		buf := getReqBuf(buflen)
 		_, err = io.ReadFull(sc.rw, buf)
 		if err != nil {
 			return err
@@ -77,6 +97,8 @@ func (s *Server) Run(rw io.ReadWriter) error {
 }
 
 func (sc *serverConn) handleReq(buf []byte) {
+	defer putReqBuf(buf)
+
 	err := sc.handleReqErr(buf)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
