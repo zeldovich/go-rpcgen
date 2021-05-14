@@ -211,7 +211,9 @@ func XdrArray(xs *XdrState, v []byte) {
 	}
 
 	xdrRW(xs, v)
-	xdrRW(xs, make([]byte, (4-len(v)%4)%4))
+	if len(v)%4 != 0 {
+		xdrRW(xs, make([]byte, (4-len(v)%4)%4))
+	}
 
 	// Check that the padding values are zero?
 }
