@@ -36,9 +36,8 @@ type Server struct {
 }
 
 type serverConn struct {
-	s       *Server
-	rw      io.ReadWriter
-	writeMu sync.Mutex
+	s  *Server
+	rw io.ReadWriter
 }
 
 func MakeServer() *Server {
@@ -178,8 +177,6 @@ reply:
 	wbuf := wr.WriteBuf()
 	binary.BigEndian.PutUint32(wbuf[0:4], (1<<31)|uint32(len(wbuf)-4))
 
-	sc.writeMu.Lock()
-	defer sc.writeMu.Unlock()
 	_, err = sc.rw.Write(wbuf)
 	return err
 }
