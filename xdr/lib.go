@@ -255,10 +255,15 @@ func XdrString(xs *XdrState, maxlen int, v *string) {
 	} else {
 		var szbuf [4]byte
 		xdrRW(xs, szbuf[:])
-		sz32 := binary.BigEndian.Uint32(szbuf[:])
-		sz := int(sz32)
+		sz := int(binary.BigEndian.Uint32(szbuf[:]))
+		// don't try decoding more than the buffer contains
+		if sz > len(xs.buf) {
+			xs.err = fmt.Errorf("string length %d greater than buffer size %d",
+				sz, len(xs.buf))
+			return
+		}
 
-		if (maxlen >= 0 && sz > maxlen) || sz32 < 0 {
+		if maxlen >= 0 && sz > maxlen {
 			xs.SetError("string too large")
 			return
 		}
