@@ -206,10 +206,9 @@ func XdrVarArray(xs *XdrState, maxlen int, v *[]byte) {
 	} else {
 		var szbuf [4]byte
 		xdrRW(xs, szbuf[:])
-		sz32 := binary.BigEndian.Uint32(szbuf[:])
-		sz := int(sz32)
+		sz := int(binary.BigEndian.Uint32(szbuf[:]))
 
-		if (maxlen >= 0 && sz > maxlen) || sz32 < 0 {
+		if maxlen >= 0 && sz > maxlen {
 			xs.SetError("var array too large")
 			return
 		}
@@ -258,8 +257,7 @@ func XdrString(xs *XdrState, maxlen int, v *string) {
 		sz := int(binary.BigEndian.Uint32(szbuf[:]))
 		// don't try decoding more than the buffer contains
 		if sz > len(xs.buf) {
-			xs.err = fmt.Errorf("string length %d greater than buffer size %d",
-				sz, len(xs.buf))
+			xs.err = fmt.Errorf("Not enough bytes for string: wanted %d, have %d", sz, len(xs.buf))
 			return
 		}
 

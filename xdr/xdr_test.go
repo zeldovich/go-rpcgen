@@ -36,3 +36,30 @@ func TestLargeStringLength(t *testing.T) {
 	XdrString(xr, 100, &newString)
 	assert.Error(t, xr.Error())
 }
+
+func TestXdrVarArray(t *testing.T) {
+	xw := MakeWriter(nil)
+	v := []byte{1, 2, 3}
+	XdrVarArray(xw, 100, &v)
+	assert.NoError(t, xw.Error())
+	buf := xw.WriteBuf()
+
+	xr := MakeReader(buf)
+	var newArray []byte
+	XdrVarArray(xr, 100, &newArray)
+	assert.NoError(t, xr.Error())
+	assert.Equal(t, v, newArray)
+}
+
+func TestLargeVarArrayLength(t *testing.T) {
+	xw := MakeWriter(nil)
+	v := []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	XdrVarArray(xw, 100, &v)
+	buf := xw.WriteBuf()
+	buf = buf[:6]
+
+	xr := MakeReader(buf)
+	var newArray []byte
+	XdrVarArray(xr, 100, &newArray)
+	assert.Error(t, xr.Error())
+}
