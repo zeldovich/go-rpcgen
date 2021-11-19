@@ -29,3 +29,6 @@ jobs:
         run: |
           make
           git diff --exit-code
+      - name: Test
+        run: |
+          go test ./...
