@@ -15,7 +15,7 @@ an NFS server and issues some NFS RPCs, and an example server in
 
 ```
 go install github.com/dvyukov/go-fuzz/go-fuzz@latest github.com/dvyukov/go-fuzz/go-fuzz-build@latest
-( cd rfc1057 && go-fuzz-build && go-fuzz )
+( cd rfc1057 && go-fuzz-build && ulimit -d 1048576 && go-fuzz )
 ```
 
 ## TODO
