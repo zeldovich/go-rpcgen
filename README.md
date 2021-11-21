@@ -11,6 +11,13 @@ There is an example client in `example/client/main.go` that connects to
 an NFS server and issues some NFS RPCs, and an example server in
 `example/server/main.go`.
 
+## Fuzzing the decoders
+
+```
+go install github.com/dvyukov/go-fuzz/go-fuzz@latest github.com/dvyukov/go-fuzz/go-fuzz-build@latest
+( cd rfc1057 && go-fuzz-build && go-fuzz )
+```
+
 ## TODO
 
 - Validate that encoded/decoded enums match one of the allowed values.

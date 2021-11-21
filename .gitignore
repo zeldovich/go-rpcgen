@@ -1,3 +1,7 @@
 /xdr.go
 /y.output
 /go-rpcgen
+*-fuzz.zip
+corpus
+crashers
+suppressions
