@@ -1,7 +1,10 @@
+GOPATH	:= $(shell go env GOPATH)
+GOPATH1	:= $(firstword $(subst :, ,$(GOPATH)))
+
 all: rfc1813/xdr.go rfc1057/xdr.go
 
 go-rpcgen: $(wildcard *.go) $(wildcard *.y) $(wildcard *.x)
-	go generate
+	PATH=$(PATH):$(GOPATH1)/bin go generate
 	go build .
 
 %/xdr.go %/types.go: %/prot.x ./go-rpcgen
