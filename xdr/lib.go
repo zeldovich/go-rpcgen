@@ -263,8 +263,7 @@ func XdrString(xs *XdrState, maxlen int, v *string) {
 			return
 		}
 
-		buf := make([]byte, sz)
-		xdrRW(xs, buf)
+		buf := xdrR(xs, sz)
 		*v = string(buf)
 
 		xdrRW(xs, make([]byte, (4-len(*v)%4)%4))
