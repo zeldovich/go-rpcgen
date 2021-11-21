@@ -80,7 +80,7 @@ func xdrRW(xs *XdrState, v []byte) {
 		n := copy(v, xs.buf)
 		xs.buf = xs.buf[n:]
 
-		if len(v) < n {
+		if n < len(v) {
 			xs.err = fmt.Errorf("Not enough bytes: wanted %d, got %d", len(v), n)
 		}
 	} else {
