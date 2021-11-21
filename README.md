@@ -5,7 +5,8 @@
 Run `make` to build the `go-rpcgen` tool and compile several specs,
 including NFS (rfc1813) and SUNRPC (rfc1057).
 
-You will likely need to `go install golang.org/x/tools/cmd/goyacc@latest`.
+You will likely need to `go install golang.org/x/tools/cmd/goyacc@latest`
+to run `make` in order to re-generate the encoders and decoders.
 
 There is an example client in `example/client/main.go` that connects to
 an NFS server and issues some NFS RPCs, and an example server in
