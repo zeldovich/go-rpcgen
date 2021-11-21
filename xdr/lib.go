@@ -209,7 +209,7 @@ func XdrVarArray(xs *XdrState, maxlen int, v *[]byte) {
 		sz32 := binary.BigEndian.Uint32(szbuf[:])
 		sz := int(sz32)
 
-		if (maxlen >= 0 && sz > maxlen) || sz32 < 0 {
+		if (maxlen >= 0 && sz > maxlen) || sz < 0 {
 			xs.SetError("var array too large")
 			return
 		}
@@ -258,7 +258,7 @@ func XdrString(xs *XdrState, maxlen int, v *string) {
 		sz32 := binary.BigEndian.Uint32(szbuf[:])
 		sz := int(sz32)
 
-		if (maxlen >= 0 && sz > maxlen) || sz32 < 0 {
+		if (maxlen >= 0 && sz > maxlen) || sz < 0 {
 			xs.SetError("string too large")
 			return
 		}
