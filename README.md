@@ -15,8 +15,8 @@ an NFS server and issues some NFS RPCs, and an example server in
 ## Fuzzing the decoders
 
 ```
-go install github.com/dvyukov/go-fuzz/go-fuzz@latest github.com/dvyukov/go-fuzz/go-fuzz-build@latest
-( cd rfc1057 && go-fuzz-build && ulimit -d 1048576 && go-fuzz )
+( cd rfc1057 && ulimit -d 1048576 && go test -v . -fuzz=Fuzz )
+( cd rfc1813 && ulimit -d 1048576 && go test -v . -fuzz=Fuzz )
 ```
 
 ## TODO
